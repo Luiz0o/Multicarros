@@ -1,0 +1,305 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* TOPO FIXO */
+.topo {
+    background: #47885b;
+    color: #fff;
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+.topo-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+/* Redes sociais no topo */
+.topo-redes {
+    background: #47885b;
+    text-align: right;
+    padding: 5px 10px;
+}
+
+.topo-redes a {
+    color: #fff;
+    font-size: 20px;
+    margin-left: 10px;
+    transition: 0.3s;
+    margin-right: 30px;
+    
+}
+
+.topo-redes a:hover {
+    color: #4edf0c;
+}
+
+/* Ícones no rodapé */
+.rodape-coluna a i {
+    margin-right: 8px;
+    color: #5cb85c;
+    transition: 0.3s;
+}
+
+.rodape-coluna a:hover i {
+    color: #fff;
+}
+
+
+.topo-logo {
+    display: flex;
+    gap: 350px;
+    align-items: center;
+}
+.topo-logo img {
+    background-image: url('../multilogo.png');
+    height: 55px;
+}
+.topo-logo input {
+    padding: 5px;
+    width: 200px;
+}
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* HEADER */
+.cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Lado esquerdo (logo + pesquisa) */
+.cabecalho-left {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* espaço entre logo e pesquisa */
+}
+
+/* Logo */
+.logo {
+    height: 50px;
+}
+
+/* Barra de pesquisa */
+.pesquisa-form {
+    display: flex;
+    align-items: center;
+    border: 1px solid #b8b0b0;
+    border-radius: 25px;
+    overflow: hidden;
+    background: #faf8f8;
+    
+}
+
+.barra-pesquisa {
+    border: none;
+    padding: 8px 12px;
+    outline: none;
+    width: 200px; /* tamanho do campo */
+    position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  right: 585px;
+  top: 52%;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 18px;
+  pointer-events: none;
+}
+
+
+.btn-pesquisa {
+    background: #5cb85c;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.btn-pesquisa:hover {
+    background: #4cae4c;
+}
+
+/* Menu à direita */
+.menu a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.menu a:hover {
+    color: #5cb85c;
+}
+
+
+/* BANNER */
+.banner {
+    text-align: center;
+    padding: 120px 20px 40px;
+    background: #f8f9fa;
+}
+.banner h1 span {
+    color: #5cb85c;
+}
+.btn {
+    background: #5cb85c;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+/* CARROS */
+.carros {
+    padding: 40px 20px;
+}
+.carros-grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+.carro {
+    width: 30%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    background: white;
+}
+.carro img {
+    width: 100%;
+    border-radius: 8px;
+}
+.preco {
+    color: green;
+    font-weight: bold;
+}
+
+/* FORMULÁRIO */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+}
+fieldset {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+legend {
+    font-weight: bold;
+}
+
+/* DETALHES VEÍCULO */
+.detalhes-veiculo {
+    padding: 100px 20px 40px;
+    text-align: center;
+}
+.detalhes-veiculo img {
+    width: 60%;
+    border-radius: 8px;
+}
+.acoes {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* WHATSAPP FIXO */
+.whatsapp {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #25D366;
+    color: white;
+    padding: 15px;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 24px;
+}
+.whatsapp:hover {
+    background: #07b35d;
+}
+
+/* RODAPÉ */
+.rodape {
+    background: #222;
+    color: #fff;
+    padding: 40px 20px 20px;
+    margin-top: 40px;
+}
+
+.rodape-conteudo {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.rodape-coluna {
+    flex: 1;
+    min-width: 250px;
+    margin: 10px;
+}
+
+.rodape-coluna h4 {
+    margin-bottom: 10px;
+    color: #5cb85c;
+}
+
+.rodape-coluna a {
+    display: block;
+    color: #ccc;
+    text-decoration: none;
+    margin-bottom: 6px;
+    transition: 0.3s;
+}
+
+.rodape-coluna a:hover {
+    color: #5cb85c;
+}
+
+.rodape-logo {
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+.rodape-bottom {
+    text-align: center;
+    border-top: 1px solid #444;
+    padding-top: 15px;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #aaa;
+}
+
+
+
+

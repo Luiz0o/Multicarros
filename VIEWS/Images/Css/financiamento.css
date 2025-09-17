@@ -1,0 +1,275 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f8f8f8;
+  margin: 0;
+  padding: 0;
+}
+
+.topo {
+  background: #4f8b5a;
+  color: #fff;
+  padding: 16px 0 0 0;
+  margin-bottom: 32px;
+}
+
+.topo-info {
+  display: flex;
+  justify-content: flex-end;
+  gap: 24px;
+  font-size: 16px;
+  padding-right: 32px;
+}
+
+.topo-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 12px 0;
+}
+
+.topo-logo img {
+  height: 60px;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 16px;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 18px;
+  transition: color 0.2s;
+}
+
+nav a:hover {
+  color: #c2e59c;
+}
+
+form {
+  background: #fff;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 32px 24px 24px 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+fieldset {
+  border: 1px solid #c2e59c;
+  border-radius: 6px;
+  margin-bottom: 24px;
+  padding: 18px 16px 12px 16px;
+}
+
+legend {
+  font-weight: bold;
+  color: #4f8b5a;
+  font-size: 1.1em;
+  margin-bottom: 8px;
+}
+
+label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 4px;
+  font-weight: 500;
+  color: #333;
+}
+
+input[type="text"],
+select {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  border: 1px solid #b2b2b2;
+  border-radius: 4px;
+  font-size: 15px;
+  background: #f7f7f7;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+input[type="text"]:focus,
+select:focus {
+  border-color: #4f8b5a;
+  outline: none;
+}
+
+button[type="submit"] {
+  background: #4f8b5a;
+  color: #fff;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 16px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+button[type="submit"]:hover {
+  background: #35723e;
+}
+
+.whatsapp {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #25d366;
+  color: #fff;
+  font-size: 32px;
+  border-radius: 50%;
+  padding: 10px 16px;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 100;
+}
+
+.documentos-requeridos {
+  max-width: 700px;
+  margin: 32px auto 24px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: center;
+}
+
+.documento {
+  background: #f7f7f7;
+  padding: 18px 0 12px 0;
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.documento i {
+  margin-bottom: 8px;
+  display: block;
+  color: #222;
+}
+
+.documento h3 {
+  margin: 8px 0 4px 0;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.documento p {
+  color: #444;
+  font-size: 1em;
+  margin: 0;
+}
+
+
+
+
+
+
+/* WHATSAPP FIXO */
+.whatsapp {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #25D366;
+    color: white;
+    padding: 15px;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 24px;
+}
+.whatsapp:hover {
+    background: #07b35d;
+}
+
+.documentos-requeridos {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: center;
+  margin-top: 24px;
+}
+
+.documento {
+  background: #f7f7f7;
+  padding: 16px 0;
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.documento i {
+  margin-bottom: 8px;
+  display: block;
+  color: #000;
+}
+
+.documento h3 {
+  margin: 8px 0 4px 0;
+  font-weight: bold;
+}
+
+/* RODAPÉ */
+.rodape {
+    background: #222;
+    color: #fff;
+    padding: 40px 20px 20px;
+    margin-top: 40px;
+}
+
+.rodape-conteudo {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.rodape-coluna {
+    flex: 1;
+    min-width: 250px;
+    margin: 10px;
+}
+
+.rodape-coluna h4 {
+    margin-bottom: 10px;
+    color: #5cb85c;
+}
+
+.rodape-coluna a {
+    display: block;
+    color: #ccc;
+    text-decoration: none;
+    margin-bottom: 6px;
+    transition: 0.3s;
+}
+
+.rodape-coluna a:hover {
+    color: #5cb85c;
+}
+
+.rodape-logo {
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+.rodape-bottom {
+    text-align: center;
+    border-top: 1px solid #444;
+    padding-top: 15px;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #aaa;
+}
+
+
+
+
+
