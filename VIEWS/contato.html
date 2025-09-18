@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sobre a Empresa</title>
-    <link rel="stylesheet" href="./Images/Css/sobreEmpresa.css" />
+    <title>Contato</title>
+    <link rel="stylesheet" href="../VIEWS/Images/Css/contato.css" />
   </head>
   <body>
     <!-- TOPO FIXO -->
@@ -23,51 +23,80 @@
         <a href="contato.html">Contato</a>
       </nav>
     </header>
+    <br />
+    <br>
+    <br>
+    
+    <main class="contato-container">
         <br>
-    <main class="sobre-container">
-      <h2>Venha conhecer a nossa loja! </h2>
+      <h1>Entre em contato com a Multicarros.</h1>
       <hr />
-      <section>
-        <h3>SOBRE NÓS</h3>
-        <p>
-          Fundada em 2006, à loja Multi Carros está localizada na QNE 7 Loja 20,
-          Taguatinga Norte - DF, desempenha atividades de compra, venda, troca e
-          consignação de veículos novos e seminovos, trabalha em busca da
-          excelência e da qualidade dos seus produtos e serviços.
-        </p>
-      </section>
-      <section>
-        <h3>MISSÃO</h3>
-        <p>
-          Suprir as necessidades de locomoção dos clientes, proporcionando
-          tranquilidade na negociação, comodidade, conforto, segurança e
-          transparência, agregando valor e promovendo a sustentabilidade
-          financeira, de forma a englobar os stakeholders.
-        </p>
-      </section>
-      <section>
-        <h3>VISÃO DO FUTURO</h3>
-        <p>
-          Ser referência em intermediações de veículos de diversas marcas e
-          modelos, nacionais e importados, com excelente estrutura física e
-          atendimento personalizado.
-        </p>
-      </section>
-      <section>
-        <h3>VALORES</h3>
-        <p>
-          Tem como base o respeito, a transparência, comprometimento, ética,
-          dignidade e a honestidade no segmento automobilístico.
-        </p>
-      </section>
+      <form>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nome">Nome</label>
+            <input
+              type="text"
+              id="nome"
+              name="nome"
+              placeholder="Seu nome"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Seu email"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="telefone">Telefone</label>
+            <input
+              type="text"
+              id="telefone"
+              name="telefone"
+              placeholder="DDD   Telefone"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="assunto">Assunto</label>
+            <input
+              type="text"
+              id="assunto"
+              name="assunto"
+              placeholder="Assunto"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="informacoes">Informações</label>
+          <textarea
+            id="informacoes"
+            name="informacoes"
+            placeholder="Informações"
+            rows="3"
+          ></textarea>
+        </div>
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="promocoes" name="promocoes" />
+          <label for="promocoes">Quero receber promoções e ofertas.</label>
+        </div>
+        <button type="submit">ENVIAR</button>
+      </form>
     </main>
-
- <!-- WHATSAPP FIXO -->
-    <a href="https://wa.me/55619840002200" class="whatsapp" target="_blank"
+        <!-- WHATSAPP FIXO -->
+         <a href="https://wa.me/55619840002200" class="whatsapp" target="_blank"
       >💬</a
     >
-
-     <!-- RODAPÉ -->
+    <!-- RODAPÉ -->
     <footer class="rodape">
       <div class="rodape-conteudo">
         <!-- Coluna 1 -->
