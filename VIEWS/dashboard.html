@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Painel - Multicarros (v3)</title>
+    <link rel="stylesheet" href="../VIEWS/Images/Css/dashboard.css" />
+  </head>
+  <body>
+    <aside class="sidebar glass" id="sidebar">
+      <div class="side-top">
+        <img src="../VIEWS/Images/multilogo.png" class="side-logo" alt="logo" />
+        <button id="collapseBtn" class="icon-btn">⮜</button>
+      </div>
+      <nav class="menu" id="menu">
+        <a href="#" class="menu-item active" data-section="dashboard"
+          ><span class="icon">🏠</span><span class="label">Dashboard</span></a
+        >
+        <a href="#" class="menu-item" data-section="cadastro"
+          ><span class="icon">➕</span><span class="label">Cadastrar</span></a
+        >
+        <a href="#" class="menu-item" data-section="estoque"
+          ><span class="icon">🚗</span><span class="label">Estoque</span></a
+        >
+        <a href="#" class="menu-item" data-section="relatorios"
+          ><span class="icon">📊</span><span class="label">Relatórios</span></a
+        >
+        <a href="#" class="menu-item" data-section="config"
+          ><span class="icon">⚙️</span
+          ><span class="label">Configurações</span></a
+        >
+      </nav>
+      <div class="side-bottom muted">Multicarros • Admin</div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar glass">
+        <div class="left">
+          <button id="menuToggle" class="icon-btn">☰</button>
+          <div class="search">
+            <br />
+            <input
+              id="searchInput"
+              placeholder="Pesquisar por modelo, ano ou categoria..."
+            />
+          </div>
+        </div>
+        <div class="right">
+          <div class="profile">
+            <div class="avatar">A</div>
+            <div class="profile-info">
+              <div class="name">Admin</div>
+              <a href="../VIEWS/index.html" class="logout">Sair</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="content" id="dashboardSection">
+        <div class="cards-row">
+          <div class="card stat glass">
+            <div class="stat-title">Total de Veículos</div>
+            <div class="stat-value" id="totalCount">0</div>
+          </div>
+          <div class="card stat glass">
+            <div class="stat-title">Valor Médio</div>
+            <div class="stat-value" id="avgPrice">R$ 0,00</div>
+          </div>
+          <div class="card stat glass">
+            <div class="stat-title">Últimos adicionados</div>
+            <div class="stat-value" id="recentCount">—</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card glass chart-card">
+            <h3>Distribuição por Categoria</h3>
+            <canvas id="chartCanvas" width="600" height="240"></canvas>
+          </div>
+
+          <div class="card glass table-card">
+            <div class="table-header">
+              <h3>Veículos em estoque</h3>
+              <div class="table-controls">
+                <button id="exportCsv" class="btn ghost">Exportar CSV</button>
+                <button id="clearData" class="btn ghost danger">
+                  Limpar dados
+                </button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table id="veiculosTable">
+                <thead>
+                  <tr>
+                    <th>Foto</th>
+                    <th>Modelo</th>
+                    <th>Ano</th>
+                    <th>Preço</th>
+                    <th>Categoria</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <div class="table-footer">
+              <div class="pagination" id="pagination"></div>
+            </div>
+          </div>
+          <br />
+        </div>
+        <br />
+      </section>
+
+      <section class="content hide" id="cadastroSection">
+        <div class="card glass">
+          <h3>Cadastrar / Editar Veículo</h3>
+          <form id="vehicleForm" class="form-grid">
+            <div>
+              <label>Modelo</label><input id="v_modelo" required />
+              <label>Ano</label><input id="v_ano" type="number" required />
+            </div>
+            <div>
+              <label>Preço (R$)</label
+              ><input id="v_preco" type="number" required />
+              <label>Categoria</label>
+              <select id="v_categoria" required>
+                <option value="">-- selecione --</option>
+                <option value="Sedan">Sedan</option>
+                <option value="SUV">SUV</option>
+                <option value="Hatch">Hatch</option>
+                <option value="Pickup">Pickup</option>
+              </select>
+            </div>
+
+            <div style="grid-column: 1/-1">
+              <label>Foto</label
+              ><input id="v_foto" type="file" accept="image/png/*" />
+            </div>
+            <div style="grid-column: 1/-1">
+              <label>Descrição</label><textarea id="v_desc" rows="4"></textarea>
+            </div>
+            <div style="grid-column: 1/-1" class="form-actions">
+              <button class="btn primary" id="saveVehicle">Salvar</button>
+              <button class="btn ghost" id="cancelEdit" type="button">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+        <br />
+      </section>
+
+      <section class="content hide" id="estoqueSection">
+        <div class="card glass">
+          <h3>Gerenciar Estoque</h3>
+          <div id="estoqueLista"></div>
+        </div>
+      </section>
+
+      <footer class="footer glass">
+        <div class="footer-left">
+          <img src="../VIEWS/Images/multilogo.png" class="footer-logo" />
+        </div>
+        <div class="muted">© 2025</div>
+      </footer>
+    </main>
+
+    <!-- modal backdrop -->
+    <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+      <div class="modal" id="modal">
+        <div class="modal-header">
+          <h4 id="modalTitle">Confirmar</h4>
+          <button id="modalClose" class="icon-btn">✖</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-actions" id="modalActions"></div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" aria-hidden="true"></div>
+
+    <script src="../VIEWS/JS/v3-app.js"></script>
+  </body>
+</html>

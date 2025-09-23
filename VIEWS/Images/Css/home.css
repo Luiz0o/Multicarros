@@ -71,9 +71,13 @@ nav {
     margin-top: 10px;
 }
 nav a {
-    color: white;
+    color: rgb(252, 249, 249);
     text-decoration: none;
     font-weight: bold;
+}
+
+nav a:hover {
+    color: #06f025;
 }
 
 /* HEADER */
