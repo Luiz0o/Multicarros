@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Filtro de Veiculos</title>
+    <link rel="stylesheet" href="../VIEWS/Images/Css/filtragemVeiculos.css" />
+  </head>
+  <body>
+
+    <!-- TOPO FIXO -->
+    <header class="topo">
+      <div class="topo-info">
+        <span> 📞 (61) 3352-2619</span>
+        <span> 💬 (61) 98400-0200</span>
+        <div class="topo-redes">
+          <a href="https://www.facebook.com/MCMULTICARROS/" target="_blank"
+            ><i class="fab fa-facebook-f"></i
+          ></a>
+          <a
+            href="https://www.instagram.com/multicarrosveiculos/"
+            target="_blank"
+            ><i class="fab fa-instagram"></i
+          ></a>
+        </div>
+      </div>
+      <div class="topo-logo">
+        <img src="./Images/multilogo.png" alt="Logo Multicarros" />
+        <input type="text" placeholder="Buscar veículo..." />
+      </div>
+      <nav>
+        <a href="home.html">Home</a>
+        <a href="financiamento.html">Financiamento</a>
+        <a href="sobreEmpresa.html">Sobre a Empresa</a>
+        <a href="contato.html">Contato</a>
+       
+      </nav>
+    </header>
+
+    <div class="ofertas-container">
+      <!-- Filtros laterais -->
+      <aside class="filtros">
+        <div class="filtro-box">
+          <div class="filtro-titulo">Marca <span>▼</span></div>
+          <div class="filtro-lista">
+            <span>BMW </span>
+            <span>CHEVROLET </span>
+            <span>FIAT </span>
+            <span>FORD </span>
+            <span>HONDA </span>
+            <span>HYUNDAI </span>
+            <span>JEEP </span>
+            <span>PEUGEOT </span>
+            <span>RENAULT </span>
+            <span>SUBARU </span>
+            <span>TOYOTA </span>
+            <span>VOLKSWAGEN </span>
+            <span>YAMAHA </span>
+          </div>
+        </div>
+        <div class="filtro-box">
+          <div class="filtro-titulo">Ano <span>▼</span></div>
+          <div class="filtro-lista">
+            <span>1973</span>
+            <span>1978</span>
+            <span>1997</span>
+            <span>2000</span>
+            <span>2005</span>
+            <span>2006</span>
+            <span>2011</span>
+            <span>2012</span>
+            <span>2015</span>
+            <span>2018</span>
+            <span>2020</span>
+            <span>2021</span>
+            <span>2022</span>
+            <span>2023</span>
+            <span>2024</span>
+            <span>2025</span>
+          </div>
+        </div>
+        <div class="filtro-box">
+          <div class="filtro-titulo">Motor <span>▼</span></div>
+          <div class="filtro-lista">
+            <span>1.0</span>
+            <span>1.2</span>
+            <span>1.4</span>
+            <span>1.6</span>
+            <span>1.8</span>
+            <span>2.0</span>
+          </div>
+        </div>
+        <div class="filtro-box">
+          <div class="filtro-titulo">Categoria <span>▼</span></div>
+          <div class="filtro-lista">
+            <span>Sedan</span>
+            <span>SUV</span>
+            <span>Hatch</span>
+            <span>Picape</span>
+          </div>
+        </div>
+        <div class="filtro-box">
+          <div class="filtro-titulo">Câmbio <span>▼</span></div>
+          <div class="filtro-lista">
+            <span>Manual</span>
+            <span>Automático</span>
+          </div>
+        </div>
+        <div class="filtro-box">
+          <div class="filtro-titulo">Combustível <span>▼</span></div>
+          <div class="filtro-lista">
+            <span>Flex</span>
+            <span>Gasolina</span>
+            <span>Diesel</span>
+          </div>
+        </div>
+        <div class="filtro-box">
+          <div class="filtro-titulo">Preço <span>▼</span></div>
+          <div class="filtro-lista">
+            <span>Até R$ 30.000</span>
+            <span>R$ 30.001 - R$ 50.000</span>
+            <span>R$ 50.001 - R$ 80.000</span>
+            <span>R$ 80.001 - R$ 120.000</span>
+            <span>Acima de R$ 120.000</span>
+          </div>
+        </div>
+      </aside>
+      <!-- Ofertas principais -->
+      <section class="ofertas-main">
+        <button
+          class="btn"
+          onclick="document.querySelector('.filtros').scrollIntoView({behavior:'smooth'})"
+        >
+         Filtros
+        </button>
+        <div class="ofertas-titulo">Ofertas de veículos</div>
+        <!-- Aqui você pode listar os veículos filtrados -->
+        <p>Selecione os filtros ao lado para encontrar o veículo ideal!</p>
+      </section>
+    </div>
+
+<!-- WHATSAPP FIXO -->
+    <a href="https://wa.me/5561984000200" class="whatsapp" target="_blank"
+      >💬</a
+    >
+  </body>
+</html>
+
+<!-- RODAPÉ -->
+    <footer class="rodape">
+      <div class="rodape-conteudo">
+        <!-- Coluna 1 -->
+        <div class="rodape-coluna">
+          <img
+            src="./Images/multilogo.png"
+            alt="Logo Multicarros"
+            class="rodape-logo"
+          />
+          <p>📍 QNE 7, Loja 19/20 , Taguatinga norte - Brasilia/DF</p>
+          <p>📞 (61) 3352-2619 | 📱 (61) 98400-0200</p>
+          <p>✉️ vendas@multicarros.com.br</p>
+        </div>
+
+        <div class="rodape-coluna">
+          <h4>Horário de Atendimento</h4>
+          <p>Segunda a Sexta: 8h - 18h</p>
+          <p>Sábado: 8h - 13h</p>
+          <p>Domingo: Fechado</p>
+        </div>
+
+        <!-- Coluna 2 -->
+        <div class="rodape-coluna">
+          <h4>Links Rápidos</h4>
+          <a href="index.html">Home</a>
+          <a href="financiamento.html">Financiamento</a>
+          <a href="sobreEmpresa.html">Sobre a Empresa</a>
+          <a href="contato.html">Contato</a>
+        </div>
+
+        <!-- Coluna 3 -->
+        <div class="rodape-coluna">
+          <h4>Siga-nos</h4>
+          <a href="https://www.facebook.com/MCMULTICARROS/">🔗 Facebook</a>
+          <a href="https://www.instagram.com/multicarrosveiculos/"
+            >🔗 Instagram</a
+          >
+          <a href="https://wa.me/55619840002200">💬 WhatsApp</a>
+        </div>
+      </div>
+
+      <div class="rodape-bottom">
+        <p>© 2025 Multicarros. Todos os direitos reservados.</p>
+      </div>
+    </footer>
+
+    <script src="../VIEWS/JS/filtragemVeiculos.js"></script>
+  </body>
+</html>
