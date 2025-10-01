@@ -2,58 +2,124 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     background: #f8f8f8;
     margin: 0;
-    padding: 0;
+    
 }
 
+/* TOPO FIXO */
 .topo {
-  background: #4f8b5a;
-  color: #fff;
-  padding: 16px 0 0 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 100;
+    background: #47885b;
+    color: #fff;
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
 }
-
 .topo-info {
-  display: flex;
-  justify-content: flex-end;
-  gap: 24px;
-  font-size: 16px;
-  padding-right: 32px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-right: 600px;
 }
 
+/* Redes sociais no topo */
+.topo-redes {
+    background: #47885b;
+    text-align: right;
+    padding: 5px 10px;
+}
+
+.topo-redes a {
+    color: #fff;
+    font-size: 20px;
+    margin-left: 1px;
+    transition: 0.3s;
+    margin-right: 30px;
+   max-height: 20px;
+    margin-right: 60px;
+}
+
+.topo-redes a:hover {
+    color: #4edf0c;
+}
+ 
 .topo-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 12px 0;
+    display: flex;
+    gap: 350px;
+    align-items: center;
 }
-
 .topo-logo img {
-  height: 60px;
+    background-image: url('../multilogo.png');
+    height: 55px;
 }
-
+.topo-logo input {
+    padding: 5px;
+    width: 200px;
+}
 nav {
-  display: flex;
-  justify-content: center;
-  gap: 32px;
-  margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
 }
-
 nav a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 18px;
-  transition: color 0.2s;
+    color: rgb(252, 249, 249);
+    text-decoration: none;
+    font-weight: bold;
 }
 
 nav a:hover {
-  color: #c2e59c;
+    color: #06f025;
 }
 
+/* HEADER */
+.cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Lado esquerdo (logo + pesquisa) */
+.cabecalho-left {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* espaço entre logo e pesquisa */
+}
+
+/* Logo */
+.logo {
+    height: 50px;
+}
+
+/* Barra de pesquisa */
+.pesquisa-form {
+    display: flex;
+    align-items: center;
+    border: 1px solid #b8b0b0;
+    border-radius: 25px;
+    overflow: hidden;
+    background: #faf8f8;
+    
+}
+
+.barra-pesquisa {
+    border: none;
+    padding: 8px 12px;
+    outline: none;
+    width: 200px; /* tamanho do campo */
+    position: relative;
+}
+.sobre-container {
+  max-width: 700px;
+  margin: 120px auto 32px auto;
+  background: #fff;
+  padding: 32px 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
 
 .contato-container {
     max-width: 800px;
@@ -179,7 +245,7 @@ button[type="submit"]:hover {
 
 /* RODAPÉ */
 .rodape {
-    background: #222;
+    background: #47885b;
     color: #fff;
     padding: 40px 20px 20px;
     margin-top: 40px;
@@ -201,7 +267,7 @@ button[type="submit"]:hover {
 
 .rodape-coluna h4 {
     margin-bottom: 10px;
-    color: #5cb85c;
+    color: #fdfdfd;
 }
 
 .rodape-coluna a {

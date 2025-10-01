@@ -26,6 +26,15 @@
   collapseBtn?.addEventListener('click', function(){ sidebar.classList.toggle('collapsed'); });
 
   // Simple navigation between sections
+
+  item.addEventListener('click', function(e) {
+  if (item.getAttribute('href') === '#') {
+    e.preventDefault();
+    // lógica de mostrar seção
+  }
+  // Se for um href real, deixa navegar normalmente
+});
+
   document.querySelectorAll('.menu-item').forEach(mi => {
     mi.addEventListener('click', function(e){
       e.preventDefault();

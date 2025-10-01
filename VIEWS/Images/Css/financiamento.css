@@ -1,136 +1,205 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background: #f8f8f8;
+  background: #c1c2bf;
   margin: 0;
-  padding: 0;
+ 
 }
 
+/* TOPO FIXO */
 .topo {
-  background: #4f8b5a;
-  color: #fff;
-  padding: 16px 0 0 0;
-  margin-bottom: 32px;
+    background: #47885b;
+    color: #fff;
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+.topo-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    margin-right: 600px;
 }
 
-.topo-info {
-  display: flex;
-  justify-content: flex-end;
-  gap: 24px;
-  font-size: 16px;
-  padding-right: 32px;
+/* Redes sociais no topo */
+.topo-redes {
+    background: #47885b;
+    text-align: right;
+    padding: 5px 10px;
 }
+
+.topo-redes a {
+    color: #fff;
+    font-size: 20px;
+    margin-left: 10px;
+    transition: 0.3s;
+    margin-right: 30px;
+    
+}
+
+.topo-redes a:hover {
+    color: #4edf0c;
+}
+
+/* Ícones no rodapé */
+.rodape-coluna a i {
+    margin-right: 8px;
+    color: #5cb85c;
+    transition: 0.3s;
+}
+
+.rodape-coluna a:hover i {
+    color: #fff;
+}
+
 
 .topo-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 12px 0;
+    display: flex;
+    gap: 350px;
+    align-items: center;
 }
-
 .topo-logo img {
-  height: 60px;
+    background-image: url('../multilogo.png');
+    height: 55px;
 }
-
+.topo-logo input {
+    padding: 5px;
+    width: 200px;
+}
 nav {
-  display: flex;
-  justify-content: center;
-  gap: 32px;
-  margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
 }
-
 nav a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 18px;
-  transition: color 0.2s;
+    color: rgb(252, 249, 249);
+    text-decoration: none;
+    font-weight: bold;
 }
 
 nav a:hover {
-  color: #c2e59c;
+    color: #06f025;
 }
 
-form {
-  background: #fff;
+/* HEADER */
+.cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Lado esquerdo (logo + pesquisa) */
+.cabecalho-left {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* espaço entre logo e pesquisa */
+}
+
+/* Logo */
+.logo {
+    height: 50px;
+}
+
+/* Barra de pesquisa */
+.pesquisa-form {
+    display: flex;
+    align-items: center;
+    border: 1px solid #b8b0b0;
+    border-radius: 25px;
+    overflow: hidden;
+    background: #faf8f8;
+    
+}
+
+/* Menu à direita */
+.menu a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.menu a:hover {
+    color: #5cb85c;
+}
+
+/* Adicione ao financiamento.css */
+.financiamento-titulo {
+  text-align: center;
+  font-size: 2.2em;
+  font-weight: bold;
+  color: #256a38;
+  margin: 90px 0 24px 0;
+  letter-spacing: 1px;
+}
+
+.form-multibox {
   max-width: 700px;
-  margin: 0 auto;
-  padding: 32px 24px 24px 24px;
-  border-radius: 8px;
+  margin: 40px auto;
+  margin-top: 50px;
+}
+
+.form-section {
+  background: #fff;
+  border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  margin-bottom: 32px;
+  padding: 0;
 }
 
 fieldset {
-  border: 1px solid #c2e59c;
-  border-radius: 6px;
-  margin-bottom: 24px;
-  padding: 18px 16px 12px 16px;
+  border: none;
+  padding: 24px 18px 12px 18px;
+  margin: 0;
 }
 
 legend {
+  font-size: 1.2em;
   font-weight: bold;
   color: #4f8b5a;
-  font-size: 1.1em;
-  margin-bottom: 8px;
+  margin-bottom: 18px;
 }
 
-label {
-  display: block;
-  margin-top: 12px;
+form-section fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-section label {
   margin-bottom: 4px;
   font-weight: 500;
-  color: #333;
+  color: #256a38;
 }
 
-input[type="text"],
-select {
+.form-section input,
+.form-section select {
   width: 100%;
-  padding: 8px 10px;
-  margin-bottom: 8px;
-  border: 1px solid #b2b2b2;
-  border-radius: 4px;
-  font-size: 15px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #c2e59c;
   background: #f7f7f7;
+  font-size: 15px;
+  margin-bottom: 8px;
   box-sizing: border-box;
-  transition: border-color 0.2s;
 }
 
-input[type="text"]:focus,
-select:focus {
-  border-color: #4f8b5a;
-  outline: none;
-}
-
-button[type="submit"] {
-  background: #4f8b5a;
-  color: #fff;
-  border: none;
-  padding: 12px 32px;
-  border-radius: 5px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 16px;
+.form-section input[type="text"],
+.form-section input[type="number"] {
   display: block;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-button[type="submit"]:hover {
-  background: #35723e;
-}
-
-.whatsapp {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background: #25d366;
-  color: #fff;
-  font-size: 32px;
-  border-radius: 50%;
-  padding: 10px 16px;
-  text-decoration: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  z-index: 100;
+legend {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #4f8b5a;
+  margin-bottom: 10px;
 }
 
 .documentos-requeridos {
@@ -168,9 +237,28 @@ button[type="submit"]:hover {
   margin: 0;
 }
 
+/* Estilização para o botão Enviar centralizado na página de financiamento */
+/* Adicione ao final do financiamento.css */
 
+.documentos-requeridos button[type="submit"] {
+  display: block;
+  margin: 32px auto 0 auto;
+  background: linear-gradient(90deg, #4f8b5a, #256a38);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 30px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(15,23,42,0.08);
+  
+}
 
-
+.documentos-requeridos button[type="submit"]:hover {
+  background: #256a38;
+  transform: translateY(-2px) scale(1.04);
+}
 
 
 /* WHATSAPP FIXO */
@@ -218,7 +306,7 @@ button[type="submit"]:hover {
 
 /* RODAPÉ */
 .rodape {
-    background: #222;
+    background: #47885b;
     color: #fff;
     padding: 40px 20px 20px;
     margin-top: 40px;
@@ -240,7 +328,7 @@ button[type="submit"]:hover {
 
 .rodape-coluna h4 {
     margin-bottom: 10px;
-    color: #5cb85c;
+    color: #fdfffd;
 }
 
 .rodape-coluna a {

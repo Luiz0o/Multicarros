@@ -16,18 +16,11 @@
         <a href="#" class="menu-item active" data-section="dashboard"
           ><span class="icon">🏠</span><span class="label">Dashboard</span></a
         >
-        <a href="#" class="menu-item" data-section="cadastro"
+        <a href="cadastrar.html" class="menu-item" data-section="cadastro"
           ><span class="icon">➕</span><span class="label">Cadastrar</span></a
         >
         <a href="#" class="menu-item" data-section="estoque"
           ><span class="icon">🚗</span><span class="label">Estoque</span></a
-        >
-        <a href="#" class="menu-item" data-section="relatorios"
-          ><span class="icon">📊</span><span class="label">Relatórios</span></a
-        >
-        <a href="#" class="menu-item" data-section="config"
-          ><span class="icon">⚙️</span
-          ><span class="label">Configurações</span></a
         >
       </nav>
       <div class="side-bottom muted">Multicarros • Admin</div>
@@ -108,45 +101,6 @@
             </div>
           </div>
           <br />
-        </div>
-        <br />
-      </section>
-
-      <section class="content hide" id="cadastroSection">
-        <div class="card glass">
-          <h3>Cadastrar / Editar Veículo</h3>
-          <form id="vehicleForm" class="form-grid">
-            <div>
-              <label>Modelo</label><input id="v_modelo" required />
-              <label>Ano</label><input id="v_ano" type="number" required />
-            </div>
-            <div>
-              <label>Preço (R$)</label
-              ><input id="v_preco" type="number" required />
-              <label>Categoria</label>
-              <select id="v_categoria" required>
-                <option value="">-- selecione --</option>
-                <option value="Sedan">Sedan</option>
-                <option value="SUV">SUV</option>
-                <option value="Hatch">Hatch</option>
-                <option value="Pickup">Pickup</option>
-              </select>
-            </div>
-
-            <div style="grid-column: 1/-1">
-              <label>Foto</label
-              ><input id="v_foto" type="file" accept="image/png/*" />
-            </div>
-            <div style="grid-column: 1/-1">
-              <label>Descrição</label><textarea id="v_desc" rows="4"></textarea>
-            </div>
-            <div style="grid-column: 1/-1" class="form-actions">
-              <button class="btn primary" id="saveVehicle">Salvar</button>
-              <button class="btn ghost" id="cancelEdit" type="button">
-                Cancelar
-              </button>
-            </div>
-          </form>
         </div>
         <br />
       </section>
