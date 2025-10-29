@@ -1,0 +1,27 @@
+{
+  "name": "multi_carros",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dist": "tsup src",
+    "start:dev": "tsx --env-file=.env watch src/server.ts",
+    "dev": "tsx watch --env-file=.env src/server.ts",
+    "start": "npm run dist && node dist/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.75.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  }
+}
