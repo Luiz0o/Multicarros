@@ -1,0 +1,894 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* TOPO FIXO */
+.topo {
+  background: #47885b;
+  color: #fff;
+  padding: 0.6rem;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+.topo-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+/* Redes sociais no topo */
+.topo-redes {
+    background: #47885b;
+    text-align: right;
+    padding: 5px 10px;
+}
+
+.topo-redes a {
+    color: #fff;
+    font-size: 20px;
+    margin-left: 10px;
+    transition: 0.3s;
+    margin-right: 30px;
+    
+}
+
+.topo-redes a:hover {
+    color: #4edf0c;
+}
+
+/* Ícones no rodapé */
+.rodape-coluna a i {
+    margin-right: 8px;
+    color: #5cb85c;
+    transition: 0.3s;
+}
+
+.rodape-coluna a:hover i {
+    color: #fff;
+}
+
+
+.topo-logo {
+  display: flex;
+  gap: clamp(1rem, 6vw, 22rem);
+  align-items: center;
+}
+.topo-logo img {
+  height: clamp(2.5rem, 3.2vw, 3.5rem);
+}
+.topo-logo input {
+  padding: 0.35rem;
+  width: clamp(8rem, 18vw, 12.5rem);
+}
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+nav a {
+    color: rgb(252, 249, 249);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #06f025;
+}
+
+/* HEADER */
+.cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Lado esquerdo (logo + pesquisa) */
+.cabecalho-left {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* espaço entre logo e pesquisa */
+}
+
+@media (max-width: 480px) {
+  .cabecalho-left {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+
+/* Logo */
+.logo {
+    height: 50px;
+}
+
+
+/* Barra de pesquisa */
+.barra-pesquisa-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 25px;
+  padding: 0.4rem 0.75rem;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  width: clamp(8rem, 18vw, 12.5rem);
+}
+
+/* Topo search wrapper: center search above nav */
+.topo-search{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+  margin-top:0.25rem;
+}
+
+/* enlarge search on larger screens while keeping it centered above nav */
+@media (min-width: 992px) {
+  .topo-search .barra-pesquisa-container{ width: clamp(12rem, 22vw, 28rem); }
+}
+
+@media (max-width: 768px){
+  .topo-search .barra-pesquisa-container{ width: 90%; max-width: 300px; }
+}
+
+.barra-pesquisa-container:hover {
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+.barra-pesquisa-container:focus-within {
+  border-color: #5cb85c;
+  box-shadow: 0 0 10px rgba(92, 184, 92, 0.6);
+  width: clamp(10rem, 28vw, 16rem);
+}
+
+.icone-pesquisa {
+  color: #47885b;
+  font-size: 1.05rem;
+  margin-right: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.barra-pesquisa-container:focus-within .icone-pesquisa {
+  color: #5cb85c;
+}
+
+.barra-pesquisa {
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  flex: 1;
+  background: transparent;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.barra-pesquisa::placeholder {
+  color: #aaa;
+  transition: 0.3s;
+}
+
+.barra-pesquisa:focus::placeholder {
+  color: transparent;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .barra-pesquisa-container {
+    width: 140px;
+  }
+
+  .barra-pesquisa-container:focus-within {
+    width: 200px;
+  }
+}
+
+
+
+.btn-pesquisa {
+  background: #5cb85c;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  color: #fff;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+.btn-pesquisa:hover {
+    background: #4cae4c;
+}
+
+/* Menu à direita */
+.menu a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.menu a:hover {
+    color: #5cb85c;
+}
+
+
+/* BANNER */
+.banner {
+  text-align: center;
+  /* top padding accounts for fixed header height + extra breathing space */
+  padding: calc(var(--topo-height) + clamp(1.5rem, 4vh, 3.5rem)) 1.25rem 2.5rem;
+  background: #ececec;
+}
+
+.banner h1 span {
+    color: #5cb85c;
+    
+}
+
+.banner p {
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+
+.btn {
+  background: #5cb85c;
+  color: white;
+  padding: 0.6rem 0.9rem;
+  text-decoration: none;
+  border-radius: 0.35rem;
+}
+
+.btn:hover {
+    transform: scale(1.06); 
+    background: #4cae4c;   
+    transition: all 0.2s ease; 
+}
+
+button, .btn, .offer-btn {
+  transition: all 0.3s ease;
+}
+
+button:hover, .btn:hover, .offer-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+
+/* WHATSAPP FIXO */
+.whatsapp {
+  position: fixed;
+  bottom: clamp(0.8rem, 3.5vh, 1.5rem);
+  right: clamp(0.8rem, 3.5vw, 1.5rem);
+  background: #25D366;
+  color: white;
+  width: clamp(3.25rem,6vw,3.75rem);
+  height: clamp(3.25rem,6vw,3.75rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  text-decoration: none;
+  padding: 0;
+  font-size: clamp(1.1rem,2.8vw,1.4rem);
+}
+.whatsapp:hover {
+  background: #07b35d;
+}
+
+/* WhatsApp jump animation (triggered by JS) */
+@keyframes whatsapp-jump {
+  0% { transform: translateY(0); }
+  20% { transform: translateY(-12px); }
+  40% { transform: translateY(0); }
+  100% { transform: translateY(0); }
+}
+.whatsapp.whatsapp-jump {
+  animation: whatsapp-jump 0.7s ease-in-out;
+  will-change: transform;
+}
+
+/* RODAPÉ */
+.rodape {
+  background: #47885b;
+  color: #fff;
+  padding: 2.5rem 1.25rem 1.25rem;
+  margin-top: 2.5rem;
+}
+
+.rodape-conteudo {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  max-width: var(--max-width,1200px);
+  margin: auto;
+}
+
+.rodape-coluna {
+    flex: 1;
+    min-width: 250px;
+    margin: 10px;
+}
+
+.rodape-coluna h4 {
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.rodape-coluna a {
+    display: block;
+    color: #ccc;
+    text-decoration: none;
+    margin-bottom: 6px;
+    transition: 0.3s;
+}
+
+.rodape-coluna a:hover {
+    color: #5cb85c;
+}
+
+.rodape-logo {
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+.rodape-bottom {
+    text-align: center;
+    border-top: 1px solid #444;
+    padding-top: 15px;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #aaa;
+}
+
+
+/* Botão flutuante das redes sociais */
+
+.social-float {
+  position: fixed;
+  /* aumentar espaçamento vertical para desgrudar do botão de WhatsApp */
+  bottom: clamp(5.5rem, 10vh, 9rem);
+  right: clamp(0.8rem, 3.5vw, 1.5rem);
+  z-index: 1001;
+  background: #25d366;
+  width: clamp(3.25rem,6vw,3.75rem);
+  height: clamp(3.25rem,6vw,3.75rem);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: clamp(1.25rem,3.2vw,1.75rem);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.social-float:hover {
+  background: #4daf81;
+}
+
+.social-popup {
+  position: absolute;
+  /* place popup centered horizontally above the floating button */
+  right: auto;
+  left: 50%;
+  bottom: calc(100% + 0.75rem);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  z-index: 1400; /* ensure popup sits above other content */
+}
+
+.social-float.active .social-popup {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.social-link {
+  background: #fff;
+  color: #4267B2;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transform: translateY(10px) scale(0.95);
+  opacity: 0;
+  transition: transform 0.32s cubic-bezier(.22,.9,.32,1), opacity 0.2s ease;
+  background-clip: padding-box;
+}
+
+.social-float.active .social-link {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.social-link.facebook { color: #4267B2; }
+.social-link.instagram { color: #E1306C; }
+
+/* Animação saltando */
+.social-float.active .social-link.facebook { transition-delay: 0.04s; }
+.social-float.active .social-link.instagram { transition-delay: 0.08s; }
+
+/* Ensure floating buttons don't overlap with WhatsApp on small screens */
+@media (max-width: 480px) {
+  /* em telas pequenas afastar ainda mais o botão de compartilhamento para cima */
+  .social-float { right: 1rem; bottom: 8rem; }
+  /* manter o WhatsApp mais embaixo, mas com um pouco mais de margem */
+  .whatsapp { right: 1rem; bottom: 1.5rem; }
+}
+
+/* === SEÇÃO DE VEÍCULOS COM LISTA LATERAL === */
+.estoque-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 2.5rem 1.25rem;
+  max-width: var(--max-width,1200px);
+  margin: auto;
+}
+
+/* === BOTÕES DO BANNER === */
+.banner-botoes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+/* Botão principal de marcas */
+.btn-marcas {
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 0.35rem;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.btn-marcas:hover {
+  background: #5cb85c;
+  transform: scale(1.03);
+}
+
+/* Ícone da seta */
+.btn-marcas .seta {
+  margin-left: 5px;
+  transition: transform 0.3s ease;
+}
+
+/* === LISTA ANIMADA DE MARCAS === */
+.marcas-container {
+  position: relative;
+}
+
+.lista-marcas-animada {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  position: absolute;
+  left: 0;
+  top: clamp(3rem, 6vh, 4rem);
+  width: clamp(12rem, 24vw, 18rem);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: all 0.4s ease;
+  z-index: 100;
+}
+
+.lista-marcas-animada.ativa {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Itens da lista */
+.lista-marcas-animada li {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+}
+
+.lista-marcas-animada.ativa li {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.lista-marcas-animada li a {
+  display: block;
+  padding: 10px 15px;
+  color: #333;
+  text-decoration: none;
+  border-bottom: 1px solid #eee;
+  transition: 0.3s;
+}
+
+.lista-marcas-animada li:last-child a {
+  border-bottom: none;
+}
+
+.lista-marcas-animada li a:hover {
+  background: #f0f8f0;
+  color: #47885b;
+  padding-left: 20px;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+.car-card {
+  background: #fff;
+  width: 100%;
+  max-width: 18rem; /* ~288px */
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeIn 0.8s ease;
+}
+
+.car-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.sponsored {
+  font-size: 0.8rem;
+  color: #888;
+  margin: 10px 0 0 12px;
+}
+
+.img-container {
+  position: relative;
+  overflow: hidden;
+  height: clamp(8rem, 28vh, 10rem);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.img-container img {
+  width: 100%;
+  transition: transform 0.4s ease;
+}
+
+.img-container:hover img {
+  transform: scale(1.1);
+}
+
+.badge {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  background: #389e19;
+  color: #fff;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.car-info {
+  padding: 0.875rem;
+}
+
+.car-info h2 {
+  font-size: 1rem;
+  margin: 0.35rem 0;
+  color: #222;
+}
+
+.subtitle {
+  color: #555;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.details {
+  font-size: 0.85rem;
+  color: #777;
+  display: flex;
+  justify-content: start;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #222;
+  margin: 0.5rem 0;
+}
+
+.offer-btn {
+  background: var(--color-dark);
+  color: #fff;
+  border: none;
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.offer-btn:hover {
+  background: #0e2272;
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* GRID DE CARROS */
+.carros-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.75rem;
+  justify-items: center;
+  align-items: start;
+  max-width: 56rem;
+  margin: 2rem auto;
+  padding: 0 0.5rem;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+  margin-top: 60px;
+  margin-bottom: 20px;
+}
+
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+.vantagens {
+  background: #f4f4f4;
+  text-align: center;
+  padding: clamp(2rem,10vh,5rem) 1.25rem;
+}
+
+.vantagens h2 {
+  font-size: clamp(1.25rem, 2.4vw, 2rem);
+  color: #333;
+  margin-bottom: 2.5rem;
+}
+
+.vantagens h2 span {
+  color: #24aa4c;
+}
+
+.vantagens-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.vantagem-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px 20px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.vantagem-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.vantagem-card i {
+  color: #24aa4c;
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.vantagem-card h3 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.mapa {
+  text-align: center;
+  background: #fff;
+  padding: 60px 20px;
+}
+
+.mapa h2 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.mapa p {
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.mapa-container {
+  max-width: 56rem;
+  margin: auto;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+}
+.mapa-container iframe {
+  width: 100%;
+  height: clamp(14rem, 40vh, 28rem);
+  border: none;
+}
+
+/* === TÍTULOS DE SEÇÃO === */
+h2 {
+  text-align: center;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #222;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 70px;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+/* Ícones dos títulos */
+h2 i {
+  margin-right: 10px;
+  color: #24aa4c;
+  font-size: 1.4em;
+  vertical-align: middle;
+  transition: transform 0.2s ease;
+}
+
+/* Efeito sutil ao passar o mouse */
+h2:hover i {
+  transform: rotate(10deg) scale(1.1);
+}
+
+/* Linha de destaque abaixo do título */
+h2::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 3px;
+  background: #24aa4c;
+  margin: 10px auto 0;
+  border-radius: 2px;
+}
+
+/* Adicione ao final do home.css */
+
+@media (max-width: 992px) {
+  .topo-logo {
+    gap: 20px;
+  }
+
+  .banner {
+    padding: 100px 20px 30px;
+  }
+
+  .banner h1 {
+    font-size: 1.5em;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Navegação compacta */
+  nav {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Cards de carros em coluna única */
+  .carros-container {
+    grid-template-columns: 1fr;
+  }
+
+  .car-card {
+    max-width: 100%;
+  }
+
+  /* Rodapé compacto */
+  .rodape-conteudo {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .rodape-coluna {
+    margin: 10px 0;
+  }
+
+  /* Barra de pesquisa */
+  .barra-pesquisa-container {
+    width: 100%;
+  }
+
+  .barra-pesquisa-container:focus-within {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .topo {
+    padding: 5px;
+  }
+
+  .topo-logo img {
+    height: 40px;
+  }
+
+  nav a {
+    font-size: 12px;
+    padding: 5px;
+  }
+
+  .banner h1 {
+    font-size: 1.2em;
+  }
+
+  .btn {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+}
+
+/* Increase banner top spacing on smaller screens so title isn't close to header */
+@media (max-width: 992px) {
+  .banner {
+    padding-top: calc(var(--topo-height) + clamp(2.5rem, 8vh, 6rem));
+  }
+}
+
+@media (max-width: 480px) {
+  .banner {
+    padding-top: calc(var(--topo-height) + clamp(3rem, 10vh, 8rem));
+  }
+}
+
+
