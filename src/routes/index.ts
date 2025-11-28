@@ -9,8 +9,12 @@ const route = (app: express.Application) => {
 
     
     app.route("/").get((req: express.Request, res: express.Response) => res.status(200).send({ message: "API Multi Carros" }));
-    app.use(express.json(), veiculos, clientes, funcionario, acessorio, usuario); // Middleware para JSON
-    
+    app.use(express.json()); // Middleware para JSON
+    app.use(veiculos);
+    app.use(clientes);
+    app.use(funcionario);
+    app.use(acessorio);
+    app.use(usuario);
 }
 
 export default route;
