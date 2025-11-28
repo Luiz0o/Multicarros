@@ -3,9 +3,9 @@ import * as clienteController from '../controllers/clienteController';
 
 const router = express.Router();
 
-router.get('/clientes', clienteController.getAllClientes)
+router.get('/usuarios', clienteController.getAllClientes)
         .get('/clientes/:cpf', clienteController.getClienteById)
-        .post('/clientes', clienteController.createCliente)
+        .post('/usuarios', clienteController.createCliente)
         .patch('/clientes/:cpf', clienteController.updateCliente)
         .delete('/clientes/:cpf', clienteController.deleteCliente); 
 
