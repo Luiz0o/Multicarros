@@ -4,10 +4,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dist": "tsup src",
+    "dist": "tsup src/server.ts",
     "start:dev": "tsx watch --env-file=.env  src/server.ts",
     "dev": "tsx watch --env-file=.env src/server.ts",
-    "start": "npm run dist && node dist/server.js"
+    "start": "npm run dist && node dist/server.cjs"
   },
   "keywords": [],
   "author": "",
