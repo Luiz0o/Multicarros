@@ -57,9 +57,6 @@ var __async = (__this, __arguments, generator) => {
 };
 
 // src/app.ts
-var import_express7 = __toESM(require("express"), 1);
-
-// src/routes/index.ts
 var import_express6 = __toESM(require("express"), 1);
 
 // src/routes/veiculoRoutes.ts
@@ -84,7 +81,7 @@ var supabaseUrl = process.env.SUPABASE_URL || "";
 var supabaseKey = process.env.SUPABASE_KEY || "";
 var supabase = (0, import_supabase_js.createClient)(supabaseUrl, supabaseKey);
 (() => __async(null, null, function* () {
-  const { error } = yield supabase.from("veiculos").select("placa").limit(1);
+  const { error } = yield supabase.from("carro_estoque").select("id").limit(1);
   if (!error) {
     console.log("Conex\xE3o com o banco Supabase estabelecida com sucesso!");
   } else {
@@ -93,41 +90,64 @@ var supabase = (0, import_supabase_js.createClient)(supabaseUrl, supabaseKey);
 }))();
 
 // src/repositories/veiculoRepository.ts
+var getAllCarrosEstoque = () => __async(null, null, function* () {
+  const { data, error } = yield supabase.from("carro_estoque").select("*");
+  if (error)
+    throw new HttpsError(
+      Number(error.code) || 500,
+      "Erro ao buscar carros do estoque"
+    );
+  return data;
+});
 var getAllVeiculos = () => __async(null, null, function* () {
-  const { data: veiculos, error } = yield supabase.from("veiculos").select("*");
-  if (!veiculos) throw new HttpsError(Number(error.code), "Erro ao buscar ve\xEDculos");
+  const { data: veiculos, error } = yield supabase.from("veiculo").select("*");
+  if (error)
+    throw new HttpsError(Number(error.code) || 500, "Erro ao buscar ve\xEDculos");
   return veiculos;
 });
 var getVeiculoById = (id) => __async(null, null, function* () {
-  const { data: veiculos, error } = yield supabase.from("veiculos").select("*").eq("id", id).single();
+  const { data: veiculos, error } = yield supabase.from("veiculo").select("*").eq("id", id).single();
   if (error) {
     if (error.code === "PGRST116") {
       return null;
     }
-    throw new HttpsError(Number(error.code), `Erro ao buscar ve\xEDculo: ${error.message}`);
+    throw new HttpsError(
+      Number(error.code),
+      `Erro ao buscar ve\xEDculo: ${error.message}`
+    );
   }
   return veiculos;
 });
 var createVeiculo = (novoVeiculo) => __async(null, null, function* () {
-  const { data: veiculos, error } = yield supabase.from("veiculos").insert(novoVeiculo).select().single();
+  const { data: veiculos, error } = yield supabase.from("veiculo").insert(novoVeiculo).select().single();
   if (error) {
     if (error.code === "23505") {
       throw new HttpsError(Number(error.code), "Placa j\xE1 cadastrada no sistema");
     }
     if (error.code === "23514") {
-      throw new HttpsError(Number(error.code), "Dados inv\xE1lidos: verifique os campos obrigat\xF3rios");
+      throw new HttpsError(
+        Number(error.code),
+        "Dados inv\xE1lidos: verifique os campos obrigat\xF3rios"
+      );
     }
-    throw new HttpsError(Number(error.code), `Erro ao criar ve\xEDculo: ${error.message}`);
+    throw new HttpsError(
+      Number(error.code),
+      `Erro ao criar ve\xEDculo: ${error.message}`
+    );
   }
   return veiculos;
 });
 var atualizarVeiculo = (id, veiculoAtualizado) => __async(null, null, function* () {
-  const { data: veiculos, error } = yield supabase.from("veiculos").update(veiculoAtualizado).eq("id", id).select().single();
-  if (error) throw new HttpsError(Number(error.code), `Erro ao atualizar ve\xEDculo: ${error.message}`);
+  const { data: veiculos, error } = yield supabase.from("veiculo").update(veiculoAtualizado).eq("id", id).select().single();
+  if (error)
+    throw new HttpsError(
+      Number(error.code),
+      `Erro ao atualizar ve\xEDculo: ${error.message}`
+    );
   return veiculos;
 });
 var deleteVeiculo = (id) => __async(null, null, function* () {
-  const { error } = yield supabase.from("veiculos").delete().eq("id", id);
+  const { error } = yield supabase.from("veiculo").delete().eq("id", id);
   if (error) {
     if (error.code === "PGRST116") {
       return false;
@@ -201,6 +221,16 @@ var uploadAndCreateFoto = (veiculo_id, buffer, path2, contentType, ordem) => __a
 });
 
 // src/services/veiculoServices.ts
+var getCarrosEstoque = () => __async(null, null, function* () {
+  const data = yield getAllCarrosEstoque();
+  let response = null;
+  if (data) {
+    response = yield ok(data);
+  } else {
+    response = yield noContent();
+  }
+  return response;
+});
 var getAllVeiculos2 = () => __async(null, null, function* () {
   const data = yield getAllVeiculos();
   let response = null;
@@ -222,37 +252,66 @@ var getVeiculoById2 = (id) => __async(null, null, function* () {
   return response;
 });
 var createVeiculo2 = (novoVeiculo, files) => __async(null, null, function* () {
+  var _a, _b;
   try {
     if (!novoVeiculo) {
       return yield badRequest("Dados do ve\xEDculo s\xE3o obrigat\xF3rios");
     }
-    const camposObrigatorios = ["placa", "tipo", "marca", "modelo", "preco"];
-    for (const campo of camposObrigatorios) {
-      if (!novoVeiculo[campo]) {
-        return yield badRequest(`Campo "${campo}" \xE9 obrigat\xF3rio`);
-      }
+    if (novoVeiculo.marcaModelo && !novoVeiculo.marca) {
+      const partes = novoVeiculo.marcaModelo.split(" ");
+      novoVeiculo.marca = partes[0];
+      novoVeiculo.modelo = partes.slice(1).join(" ") || partes[0];
     }
-    const placaRegex = /^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$/;
-    if (!placaRegex.test(novoVeiculo.placa.toUpperCase())) {
-      return yield badRequest("Formato de placa inv\xE1lido (ex: ABC1D23)");
+    const veiculoParaSalvar = {
+      placa: (_a = novoVeiculo.placa) == null ? void 0 : _a.toUpperCase(),
+      marca: novoVeiculo.marca,
+      modelo: novoVeiculo.modelo,
+      marcaModelo: novoVeiculo.marcaModelo,
+      preco: parseFloat(novoVeiculo.preco),
+      anoFabricacao: parseInt(novoVeiculo.anoFabricacao),
+      anoModelo: parseInt(novoVeiculo.anoModelo),
+      ano_modelo: parseInt(novoVeiculo.anoModelo),
+      // mapeamento alternativo
+      fabricacao: parseInt(novoVeiculo.anoFabricacao),
+      // mapeamento alternativo
+      categoria: novoVeiculo.categoria,
+      status: novoVeiculo.status,
+      especie: novoVeiculo.especie,
+      cambio: (_b = novoVeiculo.cambio) == null ? void 0 : _b.toLowerCase(),
+      cor: novoVeiculo.cor,
+      chassi: novoVeiculo.chassi,
+      renavam: novoVeiculo.renavam,
+      descricao: novoVeiculo.descricao
+    };
+    if (novoVeiculo.especie === "Motocicleta") {
+      veiculoParaSalvar.tipo = "moto";
+    } else {
+      veiculoParaSalvar.tipo = "carro";
     }
-    const tiposValidos = ["carro", "moto", "caminhao"];
-    if (!tiposValidos.includes(novoVeiculo.tipo)) {
-      return yield badRequest("Tipo de ve\xEDculo inv\xE1lido (carro, moto ou caminhao)");
+    if (!veiculoParaSalvar.placa || !veiculoParaSalvar.preco) {
+      return yield badRequest("Placa e pre\xE7o s\xE3o obrigat\xF3rios");
     }
-    novoVeiculo.placa = novoVeiculo.placa.toUpperCase();
-    const created2 = yield createVeiculo(novoVeiculo);
+    const created2 = yield createVeiculo(veiculoParaSalvar);
     const fotosCadastradas = [];
     if (files && files.length) {
       for (let i = 0; i < files.length; i++) {
         const f = files[i];
         const ext = (f.mimetype.split("/")[1] || "jpg").split("+")[0];
         const path2 = `veiculos/${created2.id}/${Date.now()}-${i}.${ext}`;
-        const foto = yield uploadAndCreateFoto(Number(created2.id), f.buffer, path2, f.mimetype, i + 1);
+        const foto = yield uploadAndCreateFoto(
+          Number(created2.id),
+          f.buffer,
+          path2,
+          f.mimetype,
+          i + 1
+        );
         fotosCadastradas.push(foto);
       }
     }
-    return { veiculo: created2, fotos: fotosCadastradas };
+    return {
+      statusCode: 201,
+      body: { veiculo: created2, fotos: fotosCadastradas }
+    };
   } catch (error) {
     console.error("Erro em createVeiculo:", error);
     return yield badRequest(
@@ -261,7 +320,10 @@ var createVeiculo2 = (novoVeiculo, files) => __async(null, null, function* () {
   }
 });
 var updateVeiculo = (placa, veiculoAtualizado) => __async(null, null, function* () {
-  const data = yield atualizarVeiculo(placa, veiculoAtualizado);
+  const data = yield atualizarVeiculo(
+    placa,
+    veiculoAtualizado
+  );
   const response = yield ok(data);
   return response;
 });
@@ -279,6 +341,14 @@ var getAllVeiculos3 = (req, res, next) => __async(null, null, function* () {
     res.status(response.statusCode).json(response.body);
   } catch (error) {
     next(new HttpsError(500, "Erro ao buscar ve\xEDculos", error));
+  }
+});
+var getCarrosEstoque2 = (req, res, next) => __async(null, null, function* () {
+  try {
+    const response = yield getCarrosEstoque();
+    res.status(response.statusCode).json(response.body);
+  } catch (error) {
+    next(new HttpsError(500, "Erro ao buscar carros do estoque", error));
   }
 });
 var getVeiculoById3 = (req, res, next) => __async(null, null, function* () {
@@ -312,7 +382,10 @@ var updateVeiculo2 = (req, res, next) => __async(null, null, function* () {
   try {
     const id = req.params.id;
     const veiculoAtualizado = req.body;
-    const response = yield updateVeiculo(id, veiculoAtualizado);
+    const response = yield updateVeiculo(
+      id,
+      veiculoAtualizado
+    );
     res.status(response.statusCode).json(response.body);
   } catch (error) {
     next(new HttpsError(500, "Erro ao atualizar ve\xEDculo", error));
@@ -337,6 +410,7 @@ var import_multer = __toESM(require("multer"), 1);
 var router = import_express.default.Router();
 var storage = import_multer.default.memoryStorage();
 var upload = (0, import_multer.default)({ storage, limits: { fileSize: 20 * 1024 * 1024 } });
+router.get("/estoque", getCarrosEstoque2);
 router.get("/veiculos", getAllVeiculos3).post("/veiculos", upload.array("foto", 8), createVeiculo3).get("/veiculos/:id", getVeiculoById3).patch("/veiculos/:id", updateVeiculo2).delete("/veiculos/:id", deleteVeiculo3);
 var veiculoRoutes_default = router;
 
@@ -403,6 +477,9 @@ var getClienteByIdService = (cpf) => __async(null, null, function* () {
 });
 var createClienteService = (cliente) => __async(null, null, function* () {
   if (cliente) {
+    if (cliente.nascimento && !cliente.data_nascimento) {
+      cliente.data_nascimento = new Date(cliente.nascimento);
+    }
     yield createClienteRepository(cliente);
     return yield created();
   } else {
@@ -410,7 +487,10 @@ var createClienteService = (cliente) => __async(null, null, function* () {
   }
 });
 var updateClienteService = (cpf, clienteAtualizado) => __async(null, null, function* () {
-  const data = yield updateClienteRepository(cpf, clienteAtualizado);
+  const data = yield updateClienteRepository(
+    cpf,
+    clienteAtualizado
+  );
   const response = yield ok(data);
   return response;
 });
@@ -464,12 +544,12 @@ var import_express3 = __toESM(require("express"), 1);
 
 // src/repositories/funcionarioRepository.ts
 var getAllFuncionarioesRepository = () => __async(null, null, function* () {
-  const { data, error } = yield supabase.from("Funcionarioes").select("*");
+  const { data, error } = yield supabase.from("funcionarios").select("*");
   if (error) throw error;
   return data;
 });
 var getFuncionarioByIdRepository = (id) => __async(null, null, function* () {
-  const { data, error } = yield supabase.from("Funcionarioes").select("*").eq("id", id).single();
+  const { data, error } = yield supabase.from("funcionarios").select("*").eq("id", id).single();
   if (error) {
     if (error.code === "PGRST116") {
       return null;
@@ -479,17 +559,17 @@ var getFuncionarioByIdRepository = (id) => __async(null, null, function* () {
   return data;
 });
 var createFuncionarioRepository = (novoFuncionario) => __async(null, null, function* () {
-  const { data, error } = yield supabase.from("Funcionarioes").insert(novoFuncionario).select().single();
+  const { data, error } = yield supabase.from("funcionarios").insert(novoFuncionario).select().single();
   if (error) throw error;
   return data;
 });
 var updateFuncionarioRepository = (id, FuncionarioAtualizado) => __async(null, null, function* () {
-  const { data, error } = yield supabase.from("Funcionarioes").update(FuncionarioAtualizado).eq("id", id).select().single();
+  const { data, error } = yield supabase.from("funcionarios").update(FuncionarioAtualizado).eq("id", id).select().single();
   if (error) throw error;
   return data;
 });
 var deleteFuncionarioRepository = (id) => __async(null, null, function* () {
-  const { error } = yield supabase.from("Funcionarioes").delete().eq("id", id);
+  const { error } = yield supabase.from("funcionarios").delete().eq("id", id);
   if (error) {
     if (error.code === "PGRST116") {
       return false;
@@ -523,6 +603,9 @@ var getFuncionarioByIdService = (id) => __async(null, null, function* () {
 var createFuncionarioService = (novoFuncionario) => __async(null, null, function* () {
   let response = null;
   if (novoFuncionario) {
+    if (novoFuncionario.nascimento && !novoFuncionario.data_nascimento) {
+      novoFuncionario.data_nascimento = new Date(novoFuncionario.nascimento);
+    }
     yield createFuncionarioRepository(novoFuncionario);
     return yield created();
   } else {
@@ -530,7 +613,10 @@ var createFuncionarioService = (novoFuncionario) => __async(null, null, function
   }
 });
 var updateFuncionarioService = (id, FuncionarioAtualizado) => __async(null, null, function* () {
-  const data = yield updateFuncionarioRepository(id, FuncionarioAtualizado);
+  const data = yield updateFuncionarioRepository(
+    id,
+    FuncionarioAtualizado
+  );
   const response = yield ok(data);
   return response;
 });
@@ -874,13 +960,14 @@ var usuarioRoutes_default = router5;
 
 // src/routes/index.ts
 var route = (app2) => {
-  app2.route("/").get((req, res) => res.status(200).send({ message: "API Multi Carros" }));
-  app2.use(import_express6.default.json());
   app2.use(veiculoRoutes_default);
   app2.use(clienteRoutes_default);
   app2.use(funcionarioRoutes_default);
   app2.use(acessorioRoutes_default);
   app2.use(usuarioRoutes_default);
+  app2.route("/api").get(
+    (req, res) => res.status(200).send({ message: "API Multi Carros" })
+  );
 };
 var routes_default = route;
 
@@ -911,16 +998,16 @@ var tratamentoErro_default = errorHandler;
 
 // src/app.ts
 function createApp() {
-  const app2 = (0, import_express7.default)();
+  const app2 = (0, import_express6.default)();
   app2.use((0, import_cors.default)());
-  app2.use(import_express7.default.json());
-  app2.use(import_express7.default.urlencoded({ extended: true }));
+  app2.use(import_express6.default.json());
+  app2.use(import_express6.default.urlencoded({ extended: true }));
   const publicDir = import_path.default.join(process.cwd(), "public");
-  app2.use("/public", import_express7.default.static(publicDir));
-  app2.use("/HTML", import_express7.default.static(import_path.default.join(publicDir, "HTML")));
-  app2.use("/css", import_express7.default.static(import_path.default.join(publicDir, "css")));
-  app2.use("/js", import_express7.default.static(import_path.default.join(publicDir, "js")));
-  app2.use("/images", import_express7.default.static(import_path.default.join(publicDir, "images")));
+  app2.use("/public", import_express6.default.static(publicDir));
+  app2.use("/HTML", import_express6.default.static(import_path.default.join(publicDir, "HTML")));
+  app2.use("/css", import_express6.default.static(import_path.default.join(publicDir, "css")));
+  app2.use("/js", import_express6.default.static(import_path.default.join(publicDir, "js")));
+  app2.use("/images", import_express6.default.static(import_path.default.join(publicDir, "images")));
   app2.get("/", (req, res) => {
     res.sendFile(import_path.default.join(publicDir, "HTML", "index.html"));
   });

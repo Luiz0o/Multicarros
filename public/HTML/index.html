@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Multicarros Home</title>
-    <link rel="stylesheet" href="../../public/css/responsive.css" />
-    <link rel="stylesheet" href="../../public/css/home.css" />
+    <link rel="stylesheet" href="/css/responsive.css" />
+    <link rel="stylesheet" href="/css/home.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -19,7 +19,7 @@
     <!-- TOPO FIXO -->
     <header class="topo">
       <div class="topo-logo">
-        <img src="../../public/Images/multilogo.png" alt="Logo Multicarros" />
+        <img src="/images/multilogo.png" alt="Logo Multicarros" />
       </div>
 
       <!-- barra de pesquisa centralizada acima do menu -->
@@ -34,11 +34,11 @@
         </div>
       </div>
       <nav>
-        <a href="../../public/HTML/index.html">Home</a>
-        <a href="../../public/HTML/financiamento.html">Financiamento</a>
-        <a href="../../public/HTML/sobreEmpresa.html">Sobre a Empresa</a>
-        <a href="../../public/HTML/contato.html">Contato</a>
-        <a href="../../public/HTML/login.html">LOGIN</a>
+        <a href="/HTML/index.html">Home</a>
+        <a href="/HTML/financiamento.html">Financiamento</a>
+        <a href="/HTML/sobreEmpresa.html">Sobre a Empresa</a>
+        <a href="/HTML/contato.html">Contato</a>
+        <a href="/HTML/login.html">LOGIN</a>
       </nav>
     </header>
 
@@ -93,7 +93,7 @@
       <div class="car-card">
         <div class="img-container">
           <img
-            src="../../public/Images/onix-plus-midnight-(22).webp"
+            src="/images/onix-plus-midnight-(22).webp"
             alt="Chevrolet Onix"
           />
           <span class="badge">Chegou!</span>
@@ -118,10 +118,7 @@
 
       <div class="car-card">
         <div class="img-container">
-          <img
-            src="../../public/Images/Corolla1.jpg"
-            alt="Toyota Corolla XEI"
-          />
+          <img src="/images/Corolla1.jpg" alt="Toyota Corolla XEI" />
           <span class="badge">Chegou!</span>
         </div>
         <div class="car-info">
@@ -146,7 +143,7 @@
       <div class="car-card">
         <div class="img-container">
           <img
-            src="../../public/Images/bcad5924b5c214c0faf52777d41c80c1.jpg"
+            src="/images/bcad5924b5c214c0faf52777d41c80c1.jpg"
             alt="Honda Civic"
           />
           <span class="badge">Seminovo</span>
@@ -166,7 +163,7 @@
       <div class="car-card">
         <div class="img-container">
           <img
-            src="../../public/Images/Novo-Gol-2013-Bluemotion-traseira-2.jpg"
+            src="/images/Novo-Gol-2013-Bluemotion-traseira-2.jpg"
             alt="Gol G6"
           />
           <span class="badge">Seminovo</span>
@@ -269,7 +266,7 @@
         <!-- Coluna 1 -->
         <div class="rodape-coluna">
           <img
-            src="../../public/Images/multilogo.png"
+            src="/images/multilogo.png"
             alt="Logo Multicarros"
             class="rodape-logo"
           />
@@ -288,10 +285,10 @@
         <!-- Coluna 2 -->
         <div class="rodape-coluna">
           <h4>Links Rápidos</h4>
-          <a href="../../public/HTML/index.html ">Home</a>
-          <a href="../../public/HTML/financiamento.html">Financiamento</a>
-          <a href="../../public/HTML/sobreEmpresa.html">Sobre a Empresa</a>
-          <a href="../../public/HTML/contato.html">Contato</a>
+          <a href="/HTML/index.html">Home</a>
+          <a href="/HTML/financiamento.html">Financiamento</a>
+          <a href="/HTML/sobreEmpresa.html">Sobre a Empresa</a>
+          <a href="/HTML/contato.html">Contato</a>
         </div>
 
         <!-- Coluna 3 -->
@@ -309,8 +306,8 @@
         <p>© 2025 Multicarros. Todos os direitos reservados.</p>
       </div>
     </footer>
-    <script src="../../public/JS/redesSociais.js"></script>
-    <script src="../../public/JS/home.js"></script>
+    <script src="/js/redesSociais.js"></script>
+    <script src="/js/home.js"></script>
 
     <!-- Script para animação do ícone de pesquisa -->
     <script>
@@ -347,7 +344,7 @@
         const existing = new Set(textNodesToArray(lista));
 
         // Fetch vehicles and derive brands
-        fetch(endpoint, { method: "GET" })
+        fetch(endpoint, {method: "GET"})
           .then((res) => {
             if (!res.ok)
               throw new Error("Erro ao buscar veículos: " + res.status);
@@ -374,7 +371,7 @@
 
             // render sorted list
             const sorted = Array.from(existing).sort((a, b) =>
-              a.localeCompare(b, "pt-BR", { sensitivity: "base" })
+              a.localeCompare(b, "pt-BR", {sensitivity: "base"})
             );
             lista.innerHTML = "";
             sorted.forEach((b) => {
@@ -461,7 +458,7 @@
               "q=" +
               encodeURIComponent(qTrim)
             : endpoint;
-          fetch(url, { method: "GET" })
+          fetch(url, {method: "GET"})
             .then((res) => {
               if (!res.ok) throw new Error("status " + res.status);
               return res.json();
@@ -512,8 +509,7 @@
     //-- script para cards de veículos --//
     <script>
       (function () {
-        const endpoint =
-          document.body.dataset.apiVeiculos || "http://localhost:3000/veiculos";
+        const endpoint = "http://localhost:3000/estoque";
         const destaqueEl = document.getElementById("destaqueContainer");
         const estoqueEl = document.getElementById("estoqueContainer");
         if (!destaqueEl || !estoqueEl) return;
@@ -523,24 +519,27 @@
         }
 
         function makeCard(v) {
-          const imgSrc =
-            v.foto || v.image || v.imagem || "../Images/default-car.jpg";
-          const badge = v.badge || v.status || (v.novo ? "Chegou!" : "") || "";
-          const modelo = v.modelo || v.marcaModelo || v.marca_modelo || "";
-          const subtitle = v.subtitle || (v.motor ? v.motor : "") || "";
-          const ano = v.ano || v.anoFabricacao || v.ano_fabricacao || "";
-          const km = v.km || v.kilometragem || "";
-          const preco = v.preco
-            ? "R$ " + Number(v.preco).toLocaleString("pt-BR")
-            : v.precoText || "---";
-          const id = v.id || v._id || "";
+          // Mapear campos da tabela carro_estoque
+          const imgSrc = v.foto_1 || v.foto_2 || "/images/default-car.jpg";
+          const badge = "Disponível";
+          const modelo =
+            v.marca && v.modelo
+              ? `${v.marca} ${v.modelo}`
+              : v.modelo || v.marca || "Veículo";
+          const subtitle = v.motor || "";
+          const ano = v.ano || "";
+          const km = v.quilometragem || "";
+          const preco = v.valor || "Consulte";
+          const id = v.id || "";
 
           const card = document.createElement("div");
           card.className = "car-card";
           card.innerHTML = `
             <div class="img-container">
-              <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(modelo)}" />
-              ${badge ? `<span class="badge">${escapeHtml(badge)}</span>` : ""}
+              <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(
+            modelo
+          )}" onerror="this.src='/images/default-car.jpg'" />
+              <span class="badge">${escapeHtml(badge)}</span>
             </div>
             <div class="car-info">
               <h2>${escapeHtml(modelo)}</h2>
@@ -558,7 +557,7 @@
           return card;
         }
 
-        fetch(endpoint, { method: "GET" })
+        fetch(endpoint, {method: "GET"})
           .then((res) => {
             if (!res.ok)
               throw new Error("Erro ao buscar veículos: " + res.status);

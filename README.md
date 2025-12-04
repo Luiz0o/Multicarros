@@ -34,6 +34,15 @@ Sistema de gestão de veículos, clientes e funcionários, utilizando Node.js, E
    http://localhost:3000/
    ```
 
+## Credenciais de acesso (Admin)
+
+Estas são as credenciais de administrador criadas para testes no sistema:
+
+- **Usuário (email):** admin@multicarros.com
+- **Senha:** 333dev
+
+Faça login com essas credenciais na tela de login para acessar o painel administrativo.
+
 ## Observações
 
 - O front-end está na pasta `public/HTML`.

@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro Cliente</title>
-    <link rel="stylesheet" href="../../public/Css/cadastrar.css">
-</head>
-<body>
-    <body class="auth-bg">
-    <a href="../../public/HTML/dashboard.html" class="btn-voltar-home" title="Voltar para Home">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro Funcionário</title>
+    <link rel="stylesheet" href="/css/cadastrar.css" />
+  </head>
+  <body class="auth-bg">
+    <a
+      href="/HTML/dashboard.html"
+      class="btn-voltar-home"
+      title="Voltar para Home"
+    >
       <i class="fas fa-arrow-left"></i> ⬅
     </a>
     <div class="card-cadastro">
@@ -34,7 +37,7 @@
           <label>Data de Nascimento</label>
           <input type="date" name="nascimento" required />
         </div>
-        
+
         <div class="form-group">
           <label>Senha</label>
           <input type="password" name="senha" required />
@@ -47,35 +50,36 @@
     </div>
     <script>
       (function () {
-        const form = document.querySelector('form[data-endpoint]');
+        const form = document.querySelector("form[data-endpoint]");
         if (!form) return;
 
-        form.addEventListener('submit', function (e) {
+        form.addEventListener("submit", function (e) {
           e.preventDefault();
-          const endpoint = form.getAttribute('data-endpoint') || '/api/funcionarios';
+          const endpoint =
+            form.getAttribute("data-endpoint") || "/api/funcionarios";
           const fd = new FormData(form);
           const obj = {};
           for (const [k, v] of fd.entries()) obj[k] = v;
 
           fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify(obj),
           })
             .then((res) => {
-              if (!res.ok) throw new Error('Erro na requisição');
+              if (!res.ok) throw new Error("Erro na requisição");
               return res.json().catch(() => ({}));
             })
             .then((data) => {
-              console.log('Funcionário salvo', data);
-              alert('Cadastro de funcionário enviado com sucesso.');
+              console.log("Funcionário salvo", data);
+              alert("Cadastro de funcionário enviado com sucesso.");
             })
             .catch((err) => {
               console.error(err);
-              alert('Falha ao enviar cadastro de funcionário. Veja console.');
+              alert("Falha ao enviar cadastro de funcionário. Veja console.");
             });
         });
       })();
     </script>
-</body>
+  </body>
 </html>

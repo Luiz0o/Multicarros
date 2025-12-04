@@ -15,7 +15,7 @@
       <h1>Estoque Veículos</h1>
       <button class="btn-novo" id="btnNovoVeiculo">+ Novo Veículo</button>
     </header>
-<form data-endpoint="http://localhost:3000/veiculos"></form>
+    <form data-endpoint="http://localhost:3000/veiculos"></form>
     <div class="container">
       <div class="search-box">
         <input type="text" id="searchInput" placeholder="Buscar veículo..." />
@@ -73,7 +73,7 @@
     <script>
       (function () {
         const tbody = document.querySelector("#tabelaVeiculo tbody");
-        const endpoint = document.body.dataset.apiVeiculos || "/api/veiculos";
+        const endpoint = "http://localhost:3000/veiculos";
         if (!tbody) return;
 
         function escapeHtml(s) {
@@ -83,7 +83,7 @@
             .replace(/>/g, "&gt;");
         }
 
-        fetch(endpoint, { method: "GET" })
+        fetch(endpoint, {method: "GET"})
           .then((res) => {
             if (!res.ok)
               throw new Error("Erro ao buscar veículos: " + res.status);

@@ -4,15 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cadastrar Veículo- Multicarros Admin</title>
-    <link rel="stylesheet" href="../../public/Css/cadastrar.css" />
+    <link rel="stylesheet" href="/css/cadastrar.css" />
   </head>
-  <body>
-    <body class="auth-bg">
-    <a href="../../public/HTML/dashboard.html" class="btn-voltar-home" title="Voltar para Home">
+  <body class="auth-bg">
+    <a
+      href="/HTML/dashboard.html"
+      class="btn-voltar-home"
+      title="Voltar para Home"
+    >
       <i class="fas fa-arrow-left"></i> ⬅
     </a>
     <div class="card-cadastro">
-      <h2 class="card-titulo">Cadastrar / Editar Veículo 🚗</h2> -
+      <h2 class="card-titulo">Cadastrar / Editar Veículo 🚗</h2>
+      -
       <form data-endpoint="http://localhost:3000/veiculos">
         <div class="form-row">
           <div class="form-group">
@@ -28,11 +32,11 @@
           <div class="form-group">
             <label>Ano Fabricação</label>
             <input type="number" name="anoFabricacao" required />
-            <br>
+            <br />
             <label>Ano Modelo</label>
             <input type="number" name="anoModelo" required />
           </div>
-          
+
           <div class="form-group">
             <label>Categoria</label>
             <select name="categoria" required>
@@ -44,56 +48,63 @@
             </select>
           </div>
         </div>
-      <div class="form-group">
-            <label>Status</label>
-              <select name="status" required>
-              <option value="">-- selecione --</option>
-              <option>Seminovo</option>
-              <option>Novo</option>
-            </select>
-          </div>    
-          <div class="form-group">
-            <label>Espécie</label>
-              <select name="especie" required>
-              <option value="">-- selecione --</option>
-              <option>Automóvel</option>
-              <option>Motocicleta</option>
-            </select>
-          </div>    
-          <div class="form-group">
-            <label>Câmbio</label>
-              <select name="cambio" required>
-              <option value="">-- selecione --</option>
-              <option>Automático</option>
-              <option>Manual</option>
-            </select>
-          </div>    
-          <div class="form-group">
-            <label>Cor</label>
-              <input type="text" name="cor" required />
-          </div>
-          <div class="form-group">
-            <label>Placa</label>
-              <input type="text" name="placa" required />
-          </div>
-          <div class="form-group">
-            <label>Chassi</label>
-              <input type="text" name="chassi" required />
-          </div>
-          <div class="form-group">
-            <label>Renavam</label>
-              <input type="text" name="renavam" required />
-          </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select name="status" required>
+            <option value="">-- selecione --</option>
+            <option>Seminovo</option>
+            <option>Novo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Espécie</label>
+          <select name="especie" required>
+            <option value="">-- selecione --</option>
+            <option>Automóvel</option>
+            <option>Motocicleta</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Câmbio</label>
+          <select name="cambio" required>
+            <option value="">-- selecione --</option>
+            <option>Automático</option>
+            <option>Manual</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Cor</label>
+          <input type="text" name="cor" required />
+        </div>
+        <div class="form-group">
+          <label>Placa</label>
+          <input type="text" name="placa" required />
+        </div>
+        <div class="form-group">
+          <label>Chassi</label>
+          <input type="text" name="chassi" required />
+        </div>
+        <div class="form-group">
+          <label>Renavam</label>
+          <input type="text" name="renavam" required />
+        </div>
         <div class="form-group">
           <label for="fotoInput">Foto</label>
-          <input id="fotoInput" name="foto" type="file" accept="image/*" capture="environment" multiple />
+          <input
+            id="fotoInput"
+            name="foto"
+            type="file"
+            accept="image/*"
+            capture="environment"
+            multiple
+          />
           <div class="foto-preview" aria-hidden="true">
             <img id="fotoPreview" alt="Pré-visualização da foto" />
           </div>
         </div>
         <div class="form-group">
           <label>Descrição</label>
-            <textarea name="descricao" rows="3"></textarea>
+          <textarea name="descricao" rows="3"></textarea>
         </div>
         <div class="form-actions">
           <button type="submit" class="btn primary">Salvar</button>
@@ -104,73 +115,73 @@
 
     <script>
       (function () {
-        const fotoInput = document.getElementById('fotoInput');
-        const fotoPreview = document.getElementById('fotoPreview');
+        const fotoInput = document.getElementById("fotoInput");
+        const fotoPreview = document.getElementById("fotoPreview");
         const fotoLabel = document.querySelector('label[for="fotoInput"]');
 
         if (!fotoInput) return;
 
         // Ensure attributes are present (some browsers ignore HTML attr in older pages)
-        fotoInput.setAttribute('accept', 'image/*');
-        fotoInput.setAttribute('capture', 'environment');
+        fotoInput.setAttribute("accept", "image/*");
+        fotoInput.setAttribute("capture", "environment");
 
         // When user selects or takes a photo, show preview and store base64 in a hidden field
-        fotoInput.addEventListener('change', function (e) {
+        fotoInput.addEventListener("change", function (e) {
           const file = e.target.files && e.target.files[0];
           if (!file) return;
 
           // Create object URL for preview
           const url = URL.createObjectURL(file);
           fotoPreview.src = url;
-          fotoPreview.style.display = 'block';
-          fotoPreview.alt = 'Foto selecionada';
-          if (fotoLabel) fotoLabel.textContent = 'Foto (pronto)';
+          fotoPreview.style.display = "block";
+          fotoPreview.alt = "Foto selecionada";
+          if (fotoLabel) fotoLabel.textContent = "Foto (pronto)";
 
           // Observação: não armazenamos em base64; enviaremos o arquivo via FormData
         });
 
         // Clicking the label or preview opens the camera/file picker
         if (fotoLabel) {
-          fotoLabel.style.cursor = 'pointer';
-          fotoLabel.addEventListener('click', function () {
+          fotoLabel.style.cursor = "pointer";
+          fotoLabel.addEventListener("click", function () {
             fotoInput.click();
           });
         }
         if (fotoPreview) {
-          fotoPreview.style.cursor = 'pointer';
-          fotoPreview.addEventListener('click', function () {
+          fotoPreview.style.cursor = "pointer";
+          fotoPreview.addEventListener("click", function () {
             fotoInput.click();
           });
         }
       })();
     </script>
-    
+
     <script>
       (function () {
-        const form = document.querySelector('form[data-endpoint]');
+        const form = document.querySelector("form[data-endpoint]");
         if (!form) return;
 
-        form.addEventListener('submit', function (e) {
+        form.addEventListener("submit", function (e) {
           e.preventDefault();
-          const endpoint = form.getAttribute('data-endpoint') || '/veiculos';
+          const endpoint = form.getAttribute("data-endpoint") || "/veiculos";
           const fd = new FormData(form);
 
           // Envia FormData diretamente. Não definir 'Content-Type' — o browser colocará
           fetch(endpoint, {
-            method: 'POST',
+            method: "POST",
             body: fd,
           })
             .then((res) => {
-              if (!res.ok) throw new Error('Erro na requisição');
+              if (!res.ok) throw new Error("Erro na requisição");
               return res.json().catch(() => ({}));
             })
             .then((data) => {
-              console.log('Veículo salvo', data);
-              alert('Cadastro de veículo enviado com sucesso.');
+              console.log("Veículo salvo", data);
+              alert("Cadastro de veículo enviado com sucesso.");
             })
             .catch((err) => {
               console.error(err);
-              alert('Falha ao enviar cadastro de veículo. Veja console.');
+              alert("Falha ao enviar cadastro de veículo. Veja console.");
             });
         });
       })();

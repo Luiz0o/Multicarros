@@ -13,73 +13,86 @@ window.addEventListener("DOMContentLoaded", () => {
   }, 150);
 });
 
-// LOGIN COM MINI LOADER + SPINNER
-form.addEventListener("submit", (e) => {
+// LOGIN COM API
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const user = document.getElementById("user").value.trim().toLowerCase();
+  const user = document.getElementById("user").value.trim();
   const pass = document.getElementById("pass").value.trim();
+
+  console.log("🔍 Dados a enviar:", {email: user, senha: pass});
 
   // Adiciona spinner e desativa botão
   btn.classList.add("loading");
   btn.innerHTML = "Verificando...";
   btn.disabled = true;
 
-  setTimeout(() => {
-    const adminUser = { email: "admin", senha: "123456" };
-    const clienteUser = { email: "cliente", senha: "654321" };
+  try {
+    const response = await fetch("http://localhost:3000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: user,
+        senha: pass,
+      }),
+    });
 
-    // === LOGIN ADMIN ===
-    if (user === adminUser.email && pass === adminUser.senha) {
+    console.log("📡 Status da resposta:", response.status);
+    const data = await response.json();
+    console.log("📦 Dados recebidos:", data);
+
+    if (response.ok && data.success) {
+      // Salvar token e dados do usuário
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("usuario", JSON.stringify(data.usuario));
+
       btn.innerHTML = "✅ Acesso Liberado!";
       btn.style.background = "#24aa4c";
       btn.classList.remove("loading");
 
-      // Dá um tempo pra animação aparecer antes do redirecionamento
+      // Redirecionar baseado no tipo de usuário
       setTimeout(() => {
-        window.location.href = "dashboard.html";
+        const tipo = parseInt(data.usuario.tipo); // Converter para número
+        if (tipo === 1 || tipo === 2) {
+          // Admin ou Vendedor
+          window.location.href = "/HTML/dashboard.html";
+        } else {
+          // Cliente
+          window.location.href = "/HTML/dashboardCliente.html";
+        }
       }, 1200);
-
-    // === LOGIN CLIENTE ===
-    } else if (user === clienteUser.email && pass === clienteUser.senha) {
-      btn.innerHTML = "✅ Acesso Liberado!";
-      btn.style.background = "#24aa4c";
-      btn.classList.remove("loading");
-
-      setTimeout(() => {
-        window.location.href = "dashboardCliente.html";
-      }, 1200);
-
-// Função de transição suave
-function fadeOutAndRedirect(url) {
-  const card = document.querySelector(".auth-card");
-  card.style.transition = "opacity 0.6s ease";
-  card.style.opacity = "0";
-  setTimeout(() => {
-    window.location.href = "dashboard.html";
-  }, 600);
-}
-
-
-    // === LOGIN INVÁLIDO ===
     } else {
-      btn.innerHTML = "❌ Dados Inválidos";
+      // LOGIN INVÁLIDO
+      btn.innerHTML = "❌ " + (data.message || "Dados Inválidos");
       btn.style.background = "#a72626";
       btn.classList.remove("loading");
       setTimeout(() => {
         btn.innerHTML = "Entrar";
         btn.disabled = false;
         btn.style.background = "";
-      }, 1500);
+      }, 2000);
     }
-  }, 1000);
+  } catch (error) {
+    console.error("Erro ao fazer login:", error);
+    btn.innerHTML = "❌ Erro de Conexão";
+    btn.style.background = "#a72626";
+    btn.classList.remove("loading");
+    setTimeout(() => {
+      btn.innerHTML = "Entrar";
+      btn.disabled = false;
+      btn.style.background = "";
+    }, 2000);
+  }
 });
 
 const toggleSenha = document.querySelector(".toggle-senha");
 const inputSenha = document.getElementById("pass");
 
 toggleSenha.addEventListener("click", () => {
-  const tipo = inputSenha.getAttribute("type") === "password" ? "text" : "password";
+  const tipo =
+    inputSenha.getAttribute("type") === "password" ? "text" : "password";
   inputSenha.setAttribute("type", tipo);
 
   toggleSenha.classList.toggle("fa-eye");
@@ -89,7 +102,7 @@ toggleSenha.addEventListener("click", () => {
 // EFEITO DE FOCO NOS INPUTS
 const inputs = document.querySelectorAll(".input-group input");
 
-inputs.forEach(input => {
+inputs.forEach((input) => {
   input.addEventListener("focus", () => {
     input.parentElement.classList.add("focused");
   });
