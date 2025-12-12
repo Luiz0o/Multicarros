@@ -1,10 +1,130 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cadastrar Veículo- Multicarros Admin</title>
+    <title>Cadastrar Veículo - Multicarros Admin</title>
     <link rel="stylesheet" href="/css/cadastrar.css" />
+    <style>
+      /* Estilos para o preview de múltiplas fotos */
+      .foto-preview {
+        display: none;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      
+      .foto-preview.show {
+        display: flex !important;
+      }
+      
+      .foto-item {
+        position: relative;
+        width: 120px;
+        height: 120px;
+      }
+      
+      .foto-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      
+      .foto-item .remover {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: #d32f2f;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      }
+      
+      .foto-item .ordem {
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      /* Barra de progresso */
+      #uploadProgress {
+        display: none;
+        margin: 20px 0;
+      }
+      
+      #uploadProgress.show {
+        display: block !important;
+      }
+      
+      #progressContainer {
+        background: #e0e0e0;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      
+      #progressBar {
+        width: 0%;
+        height: 30px;
+        background: linear-gradient(90deg, #22833d, #2f8f4a);
+        transition: width 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        border-radius: 8px;
+      }
+      
+      #progressText {
+        text-align: center;
+        margin-top: 10px;
+        color: #256a38;
+        font-weight: bold;
+      }
+
+      .foto-count {
+        display: inline-block;
+        margin-left: 10px;
+        color: #22833d;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      /* ✅ DESTACAR O NOVO CAMPO */
+      .campo-novo {
+        position: relative;
+      }
+      
+      .campo-novo::before {
+        content: "✨ NOVO";
+        position: absolute;
+        top: -8px;
+        right: 10px;
+        background: #22833d;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: bold;
+        z-index: 1;
+      }
+    </style>
   </head>
   <body class="auth-bg">
     <a
@@ -12,179 +132,431 @@
       class="btn-voltar-home"
       title="Voltar para Home"
     >
-      <i class="fas fa-arrow-left"></i> ⬅
+      ← Voltar
     </a>
+    
     <div class="card-cadastro">
-      <h2 class="card-titulo">Cadastrar / Editar Veículo 🚗</h2>
-      -
-      <form data-endpoint="http://localhost:3000/veiculos">
+      <h2 class="card-titulo">Cadastrar Veículo 🚗</h2>
+      
+      <!-- Barra de progresso -->
+      <div id="uploadProgress">
+        <div id="progressContainer">
+          <div id="progressBar">0%</div>
+        </div>
+        <p id="progressText">Preparando upload...</p>
+      </div>
+      
+      <form id="formVeiculo" data-endpoint="http://localhost:3000/veiculos">
+        <!-- ✅ CAMPOS MARCA E MODELO SEPARADOS -->
         <div class="form-row">
           <div class="form-group">
-            <label>Marca/Modelo</label>
-            <input type="text" name="marcaModelo" required />
+            <label>Marca *</label>
+            <input 
+              type="text" 
+              name="marca" 
+              required 
+              placeholder="Ex: Toyota"
+              list="marcas-sugestoes"
+            />
+            <datalist id="marcas-sugestoes">
+              <option value="Audi">
+              <option value="BMW">
+              <option value="Chevrolet">
+              <option value="Fiat">
+              <option value="Ford">
+              <option value="Honda">
+              <option value="Hyundai">
+              <option value="Jeep">
+              <option value="Nissan">
+              <option value="Peugeot">
+              <option value="Renault">
+              <option value="Toyota">
+              <option value="Volkswagen">
+            </datalist>
           </div>
+          
           <div class="form-group">
-            <label>Preço (R$)</label>
-            <input type="number" name="preco" required />
+            <label>Modelo *</label>
+            <input 
+              type="text" 
+              name="modelo" 
+              required 
+              placeholder="Ex: Corolla"
+            />
           </div>
         </div>
+        
         <div class="form-row">
           <div class="form-group">
-            <label>Ano Fabricação</label>
-            <input type="number" name="anoFabricacao" required />
-            <br />
-            <label>Ano Modelo</label>
-            <input type="number" name="anoModelo" required />
+            <label>Preço (R$) *</label>
+            <input type="number" name="preco" step="0.01" required placeholder="Ex: 85000" />
           </div>
-
           <div class="form-group">
-            <label>Categoria</label>
-            <select name="categoria" required>
+            <label>Ano Fabricação *</label>
+            <input type="number" name="anoFabricacao" min="1900" max="2025" required placeholder="2023" />
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Ano Modelo *</label>
+            <input type="number" name="anoModelo" min="1900" max="2026" required placeholder="2024" />
+          </div>
+          <div class="form-group">
+            <label>Status *</label>
+            <select name="status" required>
               <option value="">-- selecione --</option>
-              <option>Sedan</option>
-              <option>SUV</option>
-              <option>Hatch</option>
-              <option>Picape</option>
+              <option value="novo">Novo</option>
+              <option value="usado">Usado</option>
             </select>
           </div>
         </div>
+        
         <div class="form-group">
-          <label>Status</label>
-          <select name="status" required>
-            <option value="">-- selecione --</option>
-            <option>Seminovo</option>
-            <option>Novo</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Espécie</label>
+          <label>Espécie *</label>
           <select name="especie" required>
             <option value="">-- selecione --</option>
-            <option>Automóvel</option>
-            <option>Motocicleta</option>
+            <option value="Automóvel">Automóvel</option>
+            <option value="Motocicleta">Motocicleta</option>
           </select>
         </div>
+        
         <div class="form-group">
-          <label>Câmbio</label>
+          <label>Câmbio *</label>
           <select name="cambio" required>
             <option value="">-- selecione --</option>
-            <option>Automático</option>
-            <option>Manual</option>
+            <option value="automatico">Automático</option>
+            <option value="manual">Manual</option>
           </select>
         </div>
+        
         <div class="form-group">
-          <label>Cor</label>
-          <input type="text" name="cor" required />
+          <label>Combustível</label>
+          <select name="combustivel">
+            <option value="">-- selecione --</option>
+            <option value="flex">Flex</option>
+            <option value="gasolina">Gasolina</option>
+            <option value="etanol">Etanol</option>
+            <option value="diesel">Diesel</option>
+          </select>
         </div>
+        
         <div class="form-group">
-          <label>Placa</label>
-          <input type="text" name="placa" required />
+          <label>Cor *</label>
+          <input type="text" name="cor" required placeholder="Ex: Preto" />
         </div>
-        <div class="form-group">
-          <label>Chassi</label>
-          <input type="text" name="chassi" required />
+
+         <div class="form-group">
+          <label>Portas *</label>
+          <input type="number" name="portas" required placeholder="Ex: 4" min="1" />
         </div>
+        
         <div class="form-group">
-          <label>Renavam</label>
-          <input type="text" name="renavam" required />
+          <label>Placa *</label>
+          <input type="text" name="placa" placeholder="ABC1234" required maxlength="7" style="text-transform: uppercase;" />
         </div>
+        
         <div class="form-group">
-          <label for="fotoInput">Foto</label>
+          <label>Chassi * (17 caracteres)</label>
+          <input type="text" name="chassi" maxlength="17" required placeholder="9BWZZZ377VT004251" style="text-transform: uppercase;" />
+        </div>
+        
+        <div class="form-group">
+          <label>Renavam * (11 dígitos)</label>
+          <input type="text" name="renavam" maxlength="11" required placeholder="12345678901" pattern="[0-9]{11}" />
+        </div>
+        
+        <div class="form-group">
+          <label>Quilometragem</label>
+          <input type="number" name="km" step="1" min="0" placeholder="Ex: 45000" />
+        </div>
+        
+        <div class="form-group">
+          <label for="fotoInput">
+            Fotos (máximo 8)
+            <span id="fotoCount" class="foto-count">0 selecionada(s)</span>
+          </label>
           <input
             id="fotoInput"
             name="foto"
             type="file"
-            accept="image/*"
-            capture="environment"
+            accept="image/jpeg,image/jpg,image/png,image/webp"
             multiple
+            title="Selecione até 8 fotos (Ctrl/Cmd + clique para selecionar múltiplas)"
           />
-          <div class="foto-preview" aria-hidden="true">
-            <img id="fotoPreview" alt="Pré-visualização da foto" />
-          </div>
+          <small style="color: #666; display: block; margin-top: 5px;">
+            💡 Dica: Use Ctrl/Cmd + clique para selecionar múltiplas fotos
+          </small>
+          <div id="fotoPreview" class="foto-preview"></div>
         </div>
+        
         <div class="form-group">
           <label>Descrição</label>
-          <textarea name="descricao" rows="3"></textarea>
+          <textarea name="descricao" rows="3" placeholder="Informações adicionais..."></textarea>
         </div>
+        
         <div class="form-actions">
-          <button type="submit" class="btn primary">Salvar</button>
-          <button type="button" class="btn ghost">Cancelar</button>
+          <button type="submit" class="btn primary">💾 Salvar</button>
+          <button type="button" class="btn ghost" onclick="window.history.back()">❌ Cancelar</button>
         </div>
       </form>
     </div>
 
     <script>
+      // ========================================
+      // PREVIEW DE MÚLTIPLAS FOTOS
+      // ========================================
       (function () {
         const fotoInput = document.getElementById("fotoInput");
         const fotoPreview = document.getElementById("fotoPreview");
-        const fotoLabel = document.querySelector('label[for="fotoInput"]');
+        const fotoCount = document.getElementById("fotoCount");
 
-        if (!fotoInput) return;
+        if (!fotoInput || !fotoPreview) {
+          console.error("❌ Elementos de foto não encontrados!");
+          return;
+        }
 
-        // Ensure attributes are present (some browsers ignore HTML attr in older pages)
-        fotoInput.setAttribute("accept", "image/*");
-        fotoInput.setAttribute("capture", "environment");
-
-        // When user selects or takes a photo, show preview and store base64 in a hidden field
         fotoInput.addEventListener("change", function (e) {
-          const file = e.target.files && e.target.files[0];
-          if (!file) return;
-
-          // Create object URL for preview
-          const url = URL.createObjectURL(file);
-          fotoPreview.src = url;
-          fotoPreview.style.display = "block";
-          fotoPreview.alt = "Foto selecionada";
-          if (fotoLabel) fotoLabel.textContent = "Foto (pronto)";
-
-          // Observação: não armazenamos em base64; enviaremos o arquivo via FormData
+          const files = e.target.files;
+          
+          console.log(`📸 Evento change disparado`);
+          console.log(`📁 Files object:`, files);
+          console.log(`🔢 Quantidade de arquivos: ${files ? files.length : 0}`);
+          
+          if (!files || files.length === 0) {
+            console.warn("⚠️ Nenhum arquivo selecionado");
+            renderizarPreview([]);
+            return;
+          }
+          
+          const filesArray = Array.from(files);
+          console.log(`✅ Arquivos convertidos para array: ${filesArray.length}`);
+          console.log(`📋 Nomes:`, filesArray.map(f => f.name));
+          
+          if (filesArray.length > 8) {
+            alert("Máximo de 8 fotos permitidas!");
+            fotoInput.value = '';
+            renderizarPreview([]);
+            return;
+          }
+          
+          const arquivosGrandes = filesArray.filter(f => f.size > 10 * 1024 * 1024);
+          if (arquivosGrandes.length > 0) {
+            alert(`${arquivosGrandes.length} arquivo(s) maior(es) que 10MB!`);
+            fotoInput.value = '';
+            renderizarPreview([]);
+            return;
+          }
+          
+          renderizarPreview(filesArray);
         });
 
-        // Clicking the label or preview opens the camera/file picker
-        if (fotoLabel) {
-          fotoLabel.style.cursor = "pointer";
-          fotoLabel.addEventListener("click", function () {
-            fotoInput.click();
+        function renderizarPreview(files) {
+          fotoPreview.innerHTML = '';
+          fotoCount.textContent = `${files.length} selecionada(s)`;
+          
+          if (files.length === 0) {
+            fotoPreview.classList.remove('show');
+            return;
+          }
+          
+          fotoPreview.classList.add('show');
+          
+          files.forEach((file, index) => {
+            const url = URL.createObjectURL(file);
+            
+            const fotoItem = document.createElement('div');
+            fotoItem.className = 'foto-item';
+            
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = `Foto ${index + 1}`;
+            img.onload = () => URL.revokeObjectURL(url);
+            
+            const btnRemover = document.createElement('button');
+            btnRemover.className = 'remover';
+            btnRemover.innerHTML = '×';
+            btnRemover.type = 'button';
+            btnRemover.title = 'Remover foto';
+            btnRemover.onclick = (e) => {
+              e.preventDefault();
+              removerFoto(index);
+            };
+            
+            const ordem = document.createElement('span');
+            ordem.className = 'ordem';
+            ordem.textContent = `#${index + 1}`;
+            
+            fotoItem.appendChild(img);
+            fotoItem.appendChild(btnRemover);
+            fotoItem.appendChild(ordem);
+            fotoPreview.appendChild(fotoItem);
           });
+          
+          console.log(`✅ Preview renderizado: ${files.length} foto(s)`);
         }
-        if (fotoPreview) {
-          fotoPreview.style.cursor = "pointer";
-          fotoPreview.addEventListener("click", function () {
-            fotoInput.click();
-          });
+
+        function removerFoto(index) {
+          console.log(`🗑️ Removendo foto ${index + 1}`);
+          
+          const files = Array.from(fotoInput.files);
+          files.splice(index, 1);
+          
+          const dt = new DataTransfer();
+          files.forEach(file => dt.items.add(file));
+          fotoInput.files = dt.files;
+          
+          renderizarPreview(files);
         }
       })();
-    </script>
 
-    <script>
+      // ========================================
+      // ENVIO DO FORMULÁRIO COM PROGRESSO
+      // ========================================
       (function () {
-        const form = document.querySelector("form[data-endpoint]");
-        if (!form) return;
+        const form = document.getElementById("formVeiculo");
+        const progressContainer = document.getElementById("uploadProgress");
+        const progressBar = document.getElementById("progressBar");
+        const progressText = document.getElementById("progressText");
+        const fotoInput = document.getElementById("fotoInput");
+        
+        if (!form) {
+          console.error("❌ Formulário não encontrado!");
+          return;
+        }
 
         form.addEventListener("submit", function (e) {
           e.preventDefault();
+          
+          console.log("📤 Iniciando envio do formulário...");
+          
           const endpoint = form.getAttribute("data-endpoint") || "/veiculos";
-          const fd = new FormData(form);
+          const formData = new FormData(form);
+          
+          // ✅ LOG DOS DADOS ENVIADOS
+          console.log("\n📦 === DADOS DO FORMULÁRIO ===");
+          for (let [key, value] of formData.entries()) {
+            if (key === 'foto') {
+              if (value instanceof File) {
+                console.log(`  📸 ${key}: ${value.name} (${(value.size / 1024).toFixed(2)} KB)`);
+              }
+            } else {
+              console.log(`  📝 ${key}: ${value}`);
+            }
+          }
+          
+          // Validações
+          const placa = formData.get('placa');
+          if (placa && !/^[A-Z]{3}[0-9]{4}$|^[A-Z]{3}[0-9][A-Z][0-9]{2}$/i.test(placa)) {
+            alert("Placa inválida! Use formato ABC1234 ou ABC1D23");
+            return;
+          }
+          
+          const chassi = formData.get('chassi');
+          if (chassi && chassi.length !== 17) {
+            alert("Chassi deve ter 17 caracteres!");
+            return;
+          }
+          
+          const renavam = formData.get('renavam');
+          if (renavam && renavam.length !== 11) {
+            alert("RENAVAM deve ter 11 dígitos!");
+            return;
+          }
 
-          // Envia FormData diretamente. Não definir 'Content-Type' — o browser colocará
-          fetch(endpoint, {
-            method: "POST",
-            body: fd,
-          })
-            .then((res) => {
-              if (!res.ok) throw new Error("Erro na requisição");
-              return res.json().catch(() => ({}));
-            })
-            .then((data) => {
-              console.log("Veículo salvo", data);
-              alert("Cadastro de veículo enviado com sucesso.");
-            })
-            .catch((err) => {
-              console.error(err);
-              alert("Falha ao enviar cadastro de veículo. Veja console.");
-            });
+          // Mostra barra de progresso
+          progressContainer.classList.add('show');
+          progressContainer.style.display = 'block';
+          progressText.textContent = 'Enviando dados...';
+          progressBar.style.width = '0%';
+          progressBar.textContent = '0%';
+          progressBar.style.background = 'linear-gradient(90deg, #22833d, #2f8f4a)';
+
+          const xhr = new XMLHttpRequest();
+
+          xhr.upload.addEventListener('progress', function(e) {
+            if (e.lengthComputable) {
+              const percent = Math.round((e.loaded / e.total) * 100);
+              progressBar.style.width = percent + '%';
+              progressBar.textContent = percent + '%';
+              progressText.textContent = `Enviando... ${percent}%`;
+            }
+          });
+
+          xhr.addEventListener('load', function() {
+            console.log(`📨 Resposta recebida. Status: ${xhr.status}`);
+            
+            if (xhr.status >= 200 && xhr.status < 300) {
+              progressBar.style.width = '100%';
+              progressBar.textContent = '100%';
+              progressText.textContent = '✅ Veículo cadastrado com sucesso!';
+              progressBar.style.background = 'linear-gradient(90deg, #22833d, #4caf50)';
+              
+              try {
+                const response = JSON.parse(xhr.responseText);
+                console.log('✅ Resposta completa:', response);
+                
+                if (response.fotos) {
+                  const msg = `Veículo cadastrado!\n\n${response.fotos.sucesso}/${response.fotos.total_enviadas} foto(s) enviada(s).`;
+                  
+                  if (response.fotos.lista_erros && response.fotos.lista_erros.length > 0) {
+                    const erros = response.fotos.lista_erros.map(e => `- Foto ${e.index}: ${e.erro}`).join('\n');
+                    alert(msg + '\n\nErros:\n' + erros);
+                  } else {
+                    alert(msg);
+                  }
+                } else {
+                  alert('Veículo cadastrado com sucesso!');
+                }
+              } catch (e) {
+                console.error('Erro ao parsear resposta:', e);
+                alert('Veículo cadastrado com sucesso!');
+              }
+              
+              setTimeout(() => {
+                window.location.href = '/HTML/dashboard.html';
+              }, 2000);
+            } else {
+              console.error('❌ Erro ao cadastrar. Status:', xhr.status);
+              progressText.textContent = '❌ Erro ao cadastrar veículo';
+              progressBar.style.background = '#d32f2f';
+              
+              try {
+                const error = JSON.parse(xhr.responseText);
+                console.error('Erro detalhado:', error);
+                alert('Erro: ' + (error.message || error.body?.message || 'Falha ao cadastrar'));
+              } catch (e) {
+                alert('Erro ao cadastrar veículo. Status: ' + xhr.status);
+              }
+            }
+          });
+
+          xhr.addEventListener('error', function() {
+            console.error('❌ Erro de rede');
+            progressText.textContent = '❌ Erro de conexão';
+            progressBar.style.background = '#d32f2f';
+            alert('Erro de rede. Verifique sua conexão.');
+          });
+
+          xhr.open('POST', endpoint, true);
+          xhr.send(formData);
+          
+          console.log("📡 Requisição enviada!");
         });
       })();
+      
+      // Auto-formatação
+      document.querySelector('input[name="placa"]')?.addEventListener('input', function(e) {
+        this.value = this.value.toUpperCase();
+      });
+      
+      document.querySelector('input[name="chassi"]')?.addEventListener('input', function(e) {
+        this.value = this.value.toUpperCase();
+      });
+      
+      document.querySelector('input[name="renavam"]')?.addEventListener('input', function(e) {
+        this.value = this.value.replace(/\D/g, '');
+      });
     </script>
   </body>
 </html>

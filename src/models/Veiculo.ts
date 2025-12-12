@@ -1,6 +1,7 @@
 export interface Veiculo {
   // Campos principais (baseados na tabela do Supabase)
-  placa: string; // chave primária
+  id?: string;
+  placa: string; 
   marca?: string;
   fabricacao?: number;
   modelo?: string;
@@ -20,13 +21,7 @@ export interface Veiculo {
   numero_cambio?: string;
   data_cadastro?: Date;
   descricao?: string;
-
   // Campos extras para compatibilidade
-  id?: number;
-  marcaModelo?: string;
-  anoFabricacao?: number;
-  anoModelo?: number;
-  categoria?: string;
-  especie?: string;
-  foto?: string;
+
+
 }

@@ -38,7 +38,7 @@
         <a href="/HTML/financiamento.html">Financiamento</a>
         <a href="/HTML/sobreEmpresa.html">Sobre a Empresa</a>
         <a href="/HTML/contato.html">Contato</a>
-        <a href="/HTML/login.html">LOGIN</a>
+        <a href="/HTML/login.html">Entrar</a>
       </nav>
     </header>
 
@@ -400,203 +400,297 @@
 
     //-- script para busca de veículos na barra de pesquisa --//
     <script>
-      (function () {
-        const input = document.querySelector(".barra-pesquisa");
-        const endpoint =
-          document.body.dataset.apiVeiculos || "http://localhost:3000/veiculos";
-        const destaqueEl = document.getElementById("destaqueContainer");
-        const estoqueEl = document.getElementById("estoqueContainer");
-        if (!input || !destaqueEl || !estoqueEl) return;
+      // 🔍 Script para busca de veículos na barra de pesquisa
+(function () {
+  const input = document.querySelector(".barra-pesquisa");
+  const endpoint = "http://localhost:3000/veiculos-com-fotos";
+  
+  const destaqueEl = document.getElementById("destaqueContainer");
+  const estoqueEl = document.getElementById("estoqueContainer");
+  
+  if (!input || !destaqueEl || !estoqueEl) {
+    console.warn("⚠️ Elementos de busca não encontrados");
+    return;
+  }
 
-        function escapeHtml(s) {
-          return String(s || "");
+  function escapeHtml(s) {
+    return String(s || "");
+  }
+
+  // 🎨 Mesma função makeCard (mantém consistência)
+  function makeCard(v) {
+    const imgSrc = v.foto_principal 
+      || (v.fotos && v.fotos[0] && v.fotos[0].url) 
+      || "/images/default-car.jpg";
+    
+    let badge = "Disponível";
+    if (v.status === "novo") badge = "Novo!";
+    else if (v.status === "usado") badge = "Seminovo";
+    
+    const nomeCompleto = `${v.marca || ""} ${v.modelo || ""}`.trim() || "Veículo";
+    const subtitle = v.cambio ? `${v.cambio === "automatico" ? "Automático" : "Manual"}` : "";
+    const ano = v.fabricacao || v.ano_modelo || "";
+    const km = v.km ? `${Number(v.km).toLocaleString("pt-BR")} Km` : "";
+    const preco = v.preco 
+      ? `R$ ${Number(v.preco).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}` 
+      : "Consulte";
+    const id = v.id || "";
+
+    const card = document.createElement("div");
+    card.className = "car-card";
+    card.innerHTML = `
+      <div class="img-container">
+        <img 
+          src="${escapeHtml(imgSrc)}" 
+          alt="${escapeHtml(nomeCompleto)}" 
+          onerror="this.src='/images/default-car.jpg'"
+        />
+        <span class="badge">${escapeHtml(badge)}</span>
+      </div>
+      <div class="car-info">
+        <h2>${escapeHtml(nomeCompleto)}</h2>
+        <p class="subtitle">${escapeHtml(subtitle)}</p>
+        <div class="details">
+          <span>📅 ${escapeHtml(ano)}</span>
+          <span>⏱️ ${escapeHtml(km)}</span>
+        </div>
+        <p class="price">${escapeHtml(preco)}</p>
+        <button 
+          class="offer-btn" 
+          onclick="window.location.href='/HTML/verDetalhes.html${id ? "?id=" + encodeURIComponent(id) : ""}'">
+          Ver Detalhes
+        </button>
+      </div>
+    `;
+    return card;
+  }
+
+  let lastQuery = "";
+  let timeout = null;
+
+  // 🔍 Função de busca
+  function performSearch(q) {
+    const qTrim = String(q || "").trim().toLowerCase();
+    
+    console.log(`🔍 Buscando por: "${qTrim}"`);
+
+    fetch(endpoint, { method: "GET" })
+      .then((res) => {
+        if (!res.ok) throw new Error("status " + res.status);
+        return res.json();
+      })
+      .then((data) => {
+        if (!Array.isArray(data)) return;
+
+        // 🎯 Filtra resultados se houver termo de busca
+        let resultados = data;
+        
+        if (qTrim) {
+          resultados = data.filter((v) => {
+            const marca = String(v.marca || "").toLowerCase();
+            const modelo = String(v.modelo || "").toLowerCase();
+            const ano = String(v.fabricacao || v.ano_modelo || "");
+            const cor = String(v.cor || "").toLowerCase();
+            
+            return (
+              marca.includes(qTrim) ||
+              modelo.includes(qTrim) ||
+              ano.includes(qTrim) ||
+              cor.includes(qTrim)
+            );
+          });
+          
+          console.log(`✅ ${resultados.length} resultado(s) encontrado(s)`);
         }
 
-        function makeCard(v) {
-          const imgSrc =
-            v.foto || v.image || v.imagem || "../Images/default-car.jpg";
-          const badge = v.badge || v.status || (v.novo ? "Chegou!" : "") || "";
-          const modelo = v.modelo || v.marcaModelo || v.marca_modelo || "";
-          const subtitle = v.subtitle || (v.motor ? v.motor : "") || "";
-          const ano = v.ano || v.anoFabricacao || v.ano_fabricacao || "";
-          const km = v.km || v.kilometragem || "";
-          const preco = v.preco
-            ? "R$ " + Number(v.preco).toLocaleString("pt-BR")
-            : v.precoText || "---";
-          const id = v.id || v._id || "";
-          const card = document.createElement("div");
-          card.className = "car-card";
-          card.innerHTML = `
-            <div class="img-container">
-              <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(modelo)}" />
-              ${badge ? `<span class="badge">${escapeHtml(badge)}</span>` : ""}
-            </div>
-            <div class="car-info">
-              <h2>${escapeHtml(modelo)}</h2>
-              <p class="subtitle">${escapeHtml(subtitle)}</p>
-              <div class="details">
-                <span>📅 ${escapeHtml(ano)}</span>
-                <span>⏱️ ${escapeHtml(km)}</span>
-              </div>
-              <p class="price">${escapeHtml(preco)}</p>
-              <button class="offer-btn" onclick="window.location.href='verDetalhes.html${
-                id ? "?id=" + encodeURIComponent(id) : ""
-              }'">Ver Detalhes</button>
-            </div>
-          `;
-          return card;
+        // 🎯 Separa destaque e estoque
+        const destaque = resultados.filter(v => v.status === "novo");
+        const restante = resultados.filter(v => v.status !== "novo");
+        const destaqueList = destaque.length > 0 
+          ? destaque.slice(0, 6) 
+          : resultados.slice(0, 4);
+
+        // 🧹 Limpa e renderiza
+        destaqueEl.innerHTML = "";
+        estoqueEl.innerHTML = "";
+        
+        if (resultados.length === 0) {
+          destaqueEl.innerHTML = `<p style="grid-column: 1/-1; text-align: center; padding: 2rem;">
+            Nenhum veículo encontrado para "${escapeHtml(qTrim)}"
+          </p>`;
+        } else {
+          destaqueList.forEach((v) => destaqueEl.appendChild(makeCard(v)));
+          restante.forEach((v) => estoqueEl.appendChild(makeCard(v)));
         }
+      })
+      .catch((err) => {
+        console.error("❌ Erro na busca:", err);
+      });
+  }
 
-        let lastQuery = "";
-        let timeout = null;
+  // 🎧 Event listeners
+  input.addEventListener("input", function (e) {
+    const q = e.target.value;
+    if (q === lastQuery) return;
+    lastQuery = q;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => performSearch(q), 300);
+  });
 
-        function performSearch(q) {
-          const qTrim = String(q || "").trim();
-          const url = qTrim
-            ? endpoint +
-              (endpoint.includes("?") ? "&" : "?") +
-              "q=" +
-              encodeURIComponent(qTrim)
-            : endpoint;
-          fetch(url, {method: "GET"})
-            .then((res) => {
-              if (!res.ok) throw new Error("status " + res.status);
-              return res.json();
-            })
-            .then((data) => {
-              if (!Array.isArray(data)) return;
-              // choose destaque + restante similar to initial load
-              const destaque = data.filter(
-                (v) =>
-                  v.destaque ||
-                  v.badge === "Chegou!" ||
-                  (v.status && String(v.status).toLowerCase().includes("novo"))
-              );
-              const restante = data.filter((v) => !destaque.includes(v));
-              const destaqueList = (
-                destaque.length ? destaque : data.slice(0, 4)
-              ).slice(0, 6);
-
-              destaqueEl.innerHTML = "";
-              estoqueEl.innerHTML = "";
-              destaqueList.forEach((v) => destaqueEl.appendChild(makeCard(v)));
-              restante.forEach((v) => estoqueEl.appendChild(makeCard(v)));
-            })
-            .catch((err) => {
-              console.warn("Pesquisa falhou:", err);
-            });
-        }
-
-        input.addEventListener("input", function (e) {
-          const q = e.target.value;
-          if (q === lastQuery) return;
-          lastQuery = q;
-          clearTimeout(timeout);
-          timeout = setTimeout(() => performSearch(q), 300);
-        });
-
-        // optional: search on Enter immediately
-        input.addEventListener("keydown", function (e) {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            clearTimeout(timeout);
-            performSearch(this.value);
-          }
-        });
-      })();
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      clearTimeout(timeout);
+      performSearch(this.value);
+    }
+  });
+})();
     </script>
+
 
     //-- script para cards de veículos --//
     <script>
       (function () {
-        const endpoint = "http://localhost:3000/estoque";
-        const destaqueEl = document.getElementById("destaqueContainer");
-        const estoqueEl = document.getElementById("estoqueContainer");
-        if (!destaqueEl || !estoqueEl) return;
+  // ✅ ENDPOINT CORRETO: usa /veiculos-com-fotos para pegar veículos com suas fotos
+  const endpoint = "http://localhost:3000/veiculos-com-fotos";
+  
+  const destaqueEl = document.getElementById("destaqueContainer");
+  const estoqueEl = document.getElementById("estoqueContainer");
+  
+  if (!destaqueEl || !estoqueEl) {
+    console.warn("⚠️ Containers não encontrados no DOM");
+    return;
+  }
 
-        function escapeHtml(s) {
-          return String(s || "");
-        }
+  // 🛡️ Função para escapar HTML e prevenir XSS
+  function escapeHtml(s) {
+    return String(s || "");
+  }
 
-        function makeCard(v) {
-          // Mapear campos da tabela carro_estoque
-          const imgSrc = v.foto_1 || v.foto_2 || "/images/default-car.jpg";
-          const badge = "Disponível";
-          const modelo =
-            v.marca && v.modelo
-              ? `${v.marca} ${v.modelo}`
-              : v.modelo || v.marca || "Veículo";
-          const subtitle = v.motor || "";
-          const ano = v.ano || "";
-          const km = v.quilometragem || "";
-          const preco = v.valor || "Consulte";
-          const id = v.id || "";
+  // 🎨 Função para criar um card de veículo
+  function makeCard(v) {
+    // 📸 ORDEM DE PRIORIDADE PARA FOTO
+    // 1º: foto_principal (vem do service)
+    // 2º: primeira foto do array fotos
+    // 3º: imagem padrão
+    const imgSrc = v.foto_principal 
+      || (v.fotos && v.fotos[0] && v.fotos[0].url) 
+      || "/images/default-car.jpg";
+    
+    // 🏷️ Badge baseado no status
+    let badge = "Disponível";
+    if (v.status === "novo") {
+      badge = "Novo!";
+    } else if (v.status === "usado") {
+      badge = "Seminovo";
+    }
+    
+    // 🚗 Monta o nome completo do veículo
+    const nomeCompleto = `${v.marca || ""} ${v.modelo || ""}`.trim() || "Veículo";
+    
+    // 🔧 Motor/Cambio como subtítulo
+    const subtitle = v.cambio 
+      ? `${v.cambio === "automatico" ? "Automático" : "Manual"}` 
+      : "";
+    
+    // 📅 Ano
+    const ano = v.fabricacao || v.ano_modelo || "";
+    
+    // 🛣️ Quilometragem formatada
+    const km = v.km 
+      ? `${Number(v.km).toLocaleString("pt-BR")} Km` 
+      : "";
+    
+    // 💰 Preço formatado
+    const preco = v.preco 
+      ? `R$ ${Number(v.preco).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}` 
+      : "Consulte";
+    
+    // 🆔 ID do veículo
+    const id = v.id || "";
 
-          const card = document.createElement("div");
-          card.className = "car-card";
-          card.innerHTML = `
-            <div class="img-container">
-              <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(
-            modelo
-          )}" onerror="this.src='/images/default-car.jpg'" />
-              <span class="badge">${escapeHtml(badge)}</span>
-            </div>
-            <div class="car-info">
-              <h2>${escapeHtml(modelo)}</h2>
-              <p class="subtitle">${escapeHtml(subtitle)}</p>
-              <div class="details">
-                <span>📅 ${escapeHtml(ano)}</span>
-                <span>⏱️ ${escapeHtml(km)}</span>
-              </div>
-              <p class="price">${escapeHtml(preco)}</p>
-              <button class="offer-btn" onclick="window.location.href='verDetalhes.html${
-                id ? "?id=" + encodeURIComponent(id) : ""
-              }'">Ver Detalhes</button>
-            </div>
-          `;
-          return card;
-        }
+    // 🏗️ Cria o elemento do card
+    const card = document.createElement("div");
+    card.className = "car-card";
+    card.innerHTML = `
+      <div class="img-container">
+        <img 
+          src="${escapeHtml(imgSrc)}" 
+          alt="${escapeHtml(nomeCompleto)}" 
+          onerror="this.src='/images/default-car.jpg'"
+        />
+        <span class="badge">${escapeHtml(badge)}</span>
+      </div>
+      <div class="car-info">
+        <h2>${escapeHtml(nomeCompleto)}</h2>
+        <p class="subtitle">${escapeHtml(subtitle)}</p>
+        <div class="details">
+          <span>📅 ${escapeHtml(ano)}</span>
+          <span>⏱️ ${escapeHtml(km)}</span>
+        </div>
+        <p class="price">${escapeHtml(preco)}</p>
+        <button 
+          class="offer-btn" 
+          onclick="window.location.href='/HTML/verDetalhes.html${id ? "?id=" + encodeURIComponent(id) : ""}'">
+          Ver Detalhes
+        </button>
+      </div>
+    `;
+    return card;
+  }
 
-        fetch(endpoint, {method: "GET"})
-          .then((res) => {
-            if (!res.ok)
-              throw new Error("Erro ao buscar veículos: " + res.status);
-            return res.json();
-          })
-          .then((data) => {
-            if (!Array.isArray(data)) return;
-            // determine destaque: items flagged as destaque/novo/chegou or first 4
-            const destaque = data.filter(
-              (v) =>
-                v.destaque ||
-                v.badge === "Chegou!" ||
-                (v.status && String(v.status).toLowerCase().includes("novo"))
-            );
-            const restante = data.filter((v) => !destaque.includes(v));
-            const destaqueList = (
-              destaque.length ? destaque : data.slice(0, 4)
-            ).slice(0, 6);
+  // 🌐 Busca os veículos da API
+  console.log("📡 Buscando veículos da API...");
+  
+  fetch(endpoint, { method: "GET" })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`Erro HTTP: ${res.status}`);
+      }
+      return res.json();
+    })
+    .then((data) => {
+      console.log(`✅ ${data.length} veículos recebidos da API`);
+      
+      if (!Array.isArray(data) || data.length === 0) {
+        console.warn("⚠️ Nenhum veículo encontrado");
+        destaqueEl.innerHTML = "<p>Nenhum veículo disponível no momento.</p>";
+        return;
+      }
 
-            // clear existing static cards before rendering fetched ones
-            destaqueEl.innerHTML = "";
-            estoqueEl.innerHTML = "";
+      // 🎯 Separa veículos em destaque e estoque
+      // Critério: status = 'novo' vai para destaque
+      const destaque = data.filter(v => v.status === "novo");
+      const restante = data.filter(v => v.status !== "novo");
+      
+      // Se não houver veículos novos, pega os primeiros 4 como destaque
+      const destaqueList = destaque.length > 0 
+        ? destaque.slice(0, 6) 
+        : data.slice(0, 4);
 
-            destaqueList.forEach((v) => {
-              destaqueEl.appendChild(makeCard(v));
-            });
+      console.log(`🌟 ${destaqueList.length} veículos em destaque`);
+      console.log(`📦 ${restante.length} veículos em estoque`);
 
-            restante.forEach((v) => {
-              estoqueEl.appendChild(makeCard(v));
-            });
-          })
-          .catch((err) => {
-            console.warn(
-              "Não foi possível carregar veículos dinamicamente:",
-              err
-            );
-            // leave static content as fallback
-          });
-      })();
+      // 🧹 Limpa containers (remove cards estáticos do HTML)
+      destaqueEl.innerHTML = "";
+      estoqueEl.innerHTML = "";
+
+      // 🎨 Renderiza os cards
+      destaqueList.forEach((v) => {
+        destaqueEl.appendChild(makeCard(v));
+      });
+
+      restante.forEach((v) => {
+        estoqueEl.appendChild(makeCard(v));
+      });
+      
+      console.log("🎉 Veículos carregados com sucesso!");
+    })
+    .catch((err) => {
+      console.error("❌ Erro ao carregar veículos:", err);
+      destaqueEl.innerHTML = "<p>Erro ao carregar veículos. Tente novamente mais tarde.</p>";
+    });
+})();
     </script>
   </body>
 </html>

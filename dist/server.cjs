@@ -1,7 +1,9 @@
 "use strict";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
+var __defProps = Object.defineProperties;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __getProtoOf = Object.getPrototypeOf;
@@ -18,6 +20,19 @@ var __spreadValues = (a, b) => {
         __defNormalProp(a, prop, b[prop]);
     }
   return a;
+};
+var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
+var __objRest = (source, exclude) => {
+  var target = {};
+  for (var prop in source)
+    if (__hasOwnProp.call(source, prop) && exclude.indexOf(prop) < 0)
+      target[prop] = source[prop];
+  if (source != null && __getOwnPropSymbols)
+    for (var prop of __getOwnPropSymbols(source)) {
+      if (exclude.indexOf(prop) < 0 && __propIsEnum.call(source, prop))
+        target[prop] = source[prop];
+    }
+  return target;
 };
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
@@ -57,7 +72,7 @@ var __async = (__this, __arguments, generator) => {
 };
 
 // src/app.ts
-var import_express6 = __toESM(require("express"), 1);
+var import_express7 = __toESM(require("express"), 1);
 
 // src/routes/veiculoRoutes.ts
 var import_express = __toESM(require("express"), 1);
@@ -99,14 +114,30 @@ var getAllCarrosEstoque = () => __async(null, null, function* () {
     );
   return data;
 });
+var getAllVeiculosComFotos = () => __async(null, null, function* () {
+  const { data, error } = yield supabase.from("veiculos").select(`
+      *,
+      fotos (
+        url,
+        ordem
+      )
+    `).order("data_cadastro", { ascending: false });
+  if (error) {
+    throw new HttpsError(
+      Number(error.code) || 500,
+      `Erro ao buscar ve\xEDculos com fotos: ${error.message}`
+    );
+  }
+  return data;
+});
 var getAllVeiculos = () => __async(null, null, function* () {
-  const { data: veiculos, error } = yield supabase.from("veiculo").select("*");
+  const { data: veiculos, error } = yield supabase.from("veiculos").select("*");
   if (error)
     throw new HttpsError(Number(error.code) || 500, "Erro ao buscar ve\xEDculos");
   return veiculos;
 });
 var getVeiculoById = (id) => __async(null, null, function* () {
-  const { data: veiculos, error } = yield supabase.from("veiculo").select("*").eq("id", id).single();
+  const { data: veiculos, error } = yield supabase.from("veiculos").select("*").eq("id", id).single();
   if (error) {
     if (error.code === "PGRST116") {
       return null;
@@ -118,8 +149,33 @@ var getVeiculoById = (id) => __async(null, null, function* () {
   }
   return veiculos;
 });
+var getVeiculoByIdComFotos = (id) => __async(null, null, function* () {
+  const { data, error } = yield supabase.from("veiculos").select(`
+      *,
+      fotos (
+        id,
+        url,
+        ordem,
+        criado_em
+      )
+    `).eq("id", id).single();
+  if (error) {
+    if (error.code === "PGRST116") {
+      return null;
+    }
+    throw new HttpsError(
+      Number(error.code) || 500,
+      `Erro ao buscar ve\xEDculo: ${error.message}`
+    );
+  }
+  if (data && data.fotos) {
+    data.fotos = data.fotos.sort((a, b) => a.ordem - b.ordem);
+  }
+  return data;
+});
 var createVeiculo = (novoVeiculo) => __async(null, null, function* () {
-  const { data: veiculos, error } = yield supabase.from("veiculo").insert(novoVeiculo).select().single();
+  const { data: veiculos, error } = yield supabase.from("veiculos").insert(novoVeiculo).select().single();
+  console.log("Rota /veiculos chamada", novoVeiculo);
   if (error) {
     if (error.code === "23505") {
       throw new HttpsError(Number(error.code), "Placa j\xE1 cadastrada no sistema");
@@ -138,7 +194,7 @@ var createVeiculo = (novoVeiculo) => __async(null, null, function* () {
   return veiculos;
 });
 var atualizarVeiculo = (id, veiculoAtualizado) => __async(null, null, function* () {
-  const { data: veiculos, error } = yield supabase.from("veiculo").update(veiculoAtualizado).eq("id", id).select().single();
+  const { data: veiculos, error } = yield supabase.from("veiculos").update(veiculoAtualizado).eq("id", id).select().single();
   if (error)
     throw new HttpsError(
       Number(error.code),
@@ -147,7 +203,7 @@ var atualizarVeiculo = (id, veiculoAtualizado) => __async(null, null, function* 
   return veiculos;
 });
 var deleteVeiculo = (id) => __async(null, null, function* () {
-  const { error } = yield supabase.from("veiculo").delete().eq("id", id);
+  const { error } = yield supabase.from("veiculos").delete().eq("id", id);
   if (error) {
     if (error.code === "PGRST116") {
       return false;
@@ -164,16 +220,25 @@ var ok = (data) => __async(null, null, function* () {
     body: data
   };
 });
-var created = () => __async(null, null, function* () {
+var created = (data) => __async(null, null, function* () {
   return {
     statusCode: 201,
-    body: { message: "Recurso criado com sucesso" }
+    body: data || { message: "Recurso criado com sucesso" }
   };
 });
 var noContent = () => __async(null, null, function* () {
   return {
     statusCode: 204,
     body: null
+  };
+});
+var unauthorized = (message = "N\xE3o autorizado") => __async(null, null, function* () {
+  return {
+    statusCode: 401,
+    body: {
+      success: false,
+      error: message
+    }
   };
 });
 var badRequest = (error) => __async(null, null, function* () {
@@ -241,6 +306,41 @@ var getAllVeiculos2 = () => __async(null, null, function* () {
   }
   return response;
 });
+var getAllVeiculosComFotos2 = () => __async(null, null, function* () {
+  try {
+    const data = yield getAllVeiculosComFotos();
+    if (!data || data.length === 0) {
+      return yield noContent();
+    }
+    const veiculosFormatados = data.map((veiculo) => {
+      var _a, _b, _c;
+      return __spreadProps(__spreadValues({}, veiculo), {
+        fotos: veiculo.fotos || [],
+        // Garante que sempre há um array de fotos
+        foto_principal: ((_b = (_a = veiculo.fotos) == null ? void 0 : _a[0]) == null ? void 0 : _b.url) || null,
+        // Primeira foto como principal
+        total_fotos: ((_c = veiculo.fotos) == null ? void 0 : _c.length) || 0
+      });
+    });
+    return yield ok(veiculosFormatados);
+  } catch (error) {
+    console.error("Erro ao buscar ve\xEDculos com fotos:", error);
+    throw error;
+  }
+});
+var getVeiculoByIdComFotos2 = (id) => __async(null, null, function* () {
+  var _a, _b, _c;
+  const veiculo = yield getVeiculoByIdComFotos(id);
+  if (!veiculo) {
+    return yield noContent();
+  }
+  const veiculoFormatado = __spreadProps(__spreadValues({}, veiculo), {
+    fotos: veiculo.fotos || [],
+    foto_principal: ((_b = (_a = veiculo.fotos) == null ? void 0 : _a[0]) == null ? void 0 : _b.url) || null,
+    total_fotos: ((_c = veiculo.fotos) == null ? void 0 : _c.length) || 0
+  });
+  return yield ok(veiculoFormatado);
+});
 var getVeiculoById2 = (id) => __async(null, null, function* () {
   const veiculo = yield getVeiculoById(id);
   let response = null;
@@ -252,84 +352,180 @@ var getVeiculoById2 = (id) => __async(null, null, function* () {
   return response;
 });
 var createVeiculo2 = (novoVeiculo, files) => __async(null, null, function* () {
-  var _a, _b;
+  var _a;
+  console.log("\u{1F50D} Iniciando cria\xE7\xE3o de ve\xEDculo...");
+  console.log(`\u{1F4F8} Arquivos recebidos: ${(files == null ? void 0 : files.length) || 0}`);
+  if (!novoVeiculo) {
+    return yield badRequest("Dados do ve\xEDculo s\xE3o obrigat\xF3rios");
+  }
+  if (novoVeiculo.marcaModelo && !novoVeiculo.marca) {
+    const partes = novoVeiculo.marcaModelo.split(" ");
+    novoVeiculo.marca = partes[0];
+    novoVeiculo.modelo = partes.slice(1).join(" ") || partes[0];
+  }
+  const veiculoParaSalvar = {
+    placa: (_a = novoVeiculo.placa) == null ? void 0 : _a.toUpperCase(),
+    marca: novoVeiculo.marca,
+    fabricacao: parseInt(novoVeiculo.fabricacao) || parseInt(novoVeiculo.anoFabricacao) || (/* @__PURE__ */ new Date()).getFullYear(),
+    modelo: novoVeiculo.modelo,
+    cor: novoVeiculo.cor || null,
+    combustivel: novoVeiculo.combustivel || null,
+    km: novoVeiculo.km ? parseFloat(novoVeiculo.km) : null,
+    status: ["usado", "novo"].includes(
+      (novoVeiculo.status || "usado").toLowerCase()
+    ) ? novoVeiculo.status.toLowerCase() : "usado",
+    tipo: ["carro", "moto"].includes(
+      (novoVeiculo.tipo || "carro").toLowerCase()
+    ) ? novoVeiculo.tipo.toLowerCase() : novoVeiculo.especie === "Motocicleta" ? "moto" : "carro",
+    portas: novoVeiculo.portas ? parseInt(novoVeiculo.portas) : null,
+    renavam: novoVeiculo.renavam,
+    chassi: novoVeiculo.chassi,
+    ano_modelo: novoVeiculo.ano_modelo ? parseInt(novoVeiculo.ano_modelo) : novoVeiculo.anoModelo ? parseInt(novoVeiculo.anoModelo) : null,
+    preco: novoVeiculo.preco ? parseFloat(novoVeiculo.preco) : 0,
+    cambio: ["manual", "automatico"].includes(
+      (novoVeiculo.cambio || "manual").toLowerCase()
+    ) ? novoVeiculo.cambio.toLowerCase() : "manual",
+    posicao: novoVeiculo.posicao !== void 0 ? !!novoVeiculo.posicao : true,
+    numero_motor: novoVeiculo.numero_motor || null,
+    numero_cambio: novoVeiculo.numero_cambio || null,
+    data_cadastro: novoVeiculo.data_cadastro || /* @__PURE__ */ new Date(),
+    descricao: novoVeiculo.descricao || null
+  };
+  console.log("\u{1F4CB} Dados que ser\xE3o enviados ao banco:", veiculoParaSalvar);
+  const obrigatorios = [
+    "placa",
+    "marca",
+    "fabricacao",
+    "modelo",
+    "status",
+    "tipo",
+    "renavam",
+    "chassi",
+    "preco"
+  ];
+  for (const campo of obrigatorios) {
+    if (!veiculoParaSalvar[campo] && veiculoParaSalvar[campo] !== 0) {
+      return yield badRequest(
+        `Campo obrigat\xF3rio ausente: ${campo}`
+      );
+    }
+  }
+  const placaRegex = /^[A-Z]{3}[0-9]{4}$|^[A-Z]{3}[0-9][A-Z][0-9]{2}$/;
+  if (!placaRegex.test(veiculoParaSalvar.placa)) {
+    return yield badRequest(
+      "Placa inv\xE1lida. Use formato ABC1234 ou ABC1D23"
+    );
+  }
+  if (veiculoParaSalvar.chassi.length !== 17) {
+    return yield badRequest("Chassi deve ter 17 caracteres");
+  }
+  if (!/^\d{11}$/.test(veiculoParaSalvar.renavam)) {
+    return yield badRequest("RENAVAM deve ter 11 d\xEDgitos");
+  }
   try {
-    if (!novoVeiculo) {
-      return yield badRequest("Dados do ve\xEDculo s\xE3o obrigat\xF3rios");
+    console.log("\u{1F4BE} Salvando ve\xEDculo no banco...");
+    const veiculoCriado = yield createVeiculo(veiculoParaSalvar);
+    console.log("\u2705 Ve\xEDculo criado com ID:", veiculoCriado.id);
+    if (!files || files.length === 0) {
+      console.log("\u2139\uFE0F Nenhuma foto foi enviada");
+      return yield ok({
+        veiculo: veiculoCriado,
+        fotos: [],
+        message: "Ve\xEDculo cadastrado com sucesso! (sem fotos)"
+      });
     }
-    if (novoVeiculo.marcaModelo && !novoVeiculo.marca) {
-      const partes = novoVeiculo.marcaModelo.split(" ");
-      novoVeiculo.marca = partes[0];
-      novoVeiculo.modelo = partes.slice(1).join(" ") || partes[0];
+    console.log(`\u{1F4F8} Iniciando upload de ${files.length} foto(s)...`);
+    if (!veiculoCriado.id) {
+      console.error("\u274C Ve\xEDculo criado sem ID num\xE9rico!");
+      return yield badRequest(
+        "Erro: Ve\xEDculo criado mas sem ID. N\xE3o \xE9 poss\xEDvel vincular fotos."
+      );
     }
-    const veiculoParaSalvar = {
-      placa: (_a = novoVeiculo.placa) == null ? void 0 : _a.toUpperCase(),
-      marca: novoVeiculo.marca,
-      modelo: novoVeiculo.modelo,
-      marcaModelo: novoVeiculo.marcaModelo,
-      preco: parseFloat(novoVeiculo.preco),
-      anoFabricacao: parseInt(novoVeiculo.anoFabricacao),
-      anoModelo: parseInt(novoVeiculo.anoModelo),
-      ano_modelo: parseInt(novoVeiculo.anoModelo),
-      // mapeamento alternativo
-      fabricacao: parseInt(novoVeiculo.anoFabricacao),
-      // mapeamento alternativo
-      categoria: novoVeiculo.categoria,
-      status: novoVeiculo.status,
-      especie: novoVeiculo.especie,
-      cambio: (_b = novoVeiculo.cambio) == null ? void 0 : _b.toLowerCase(),
-      cor: novoVeiculo.cor,
-      chassi: novoVeiculo.chassi,
-      renavam: novoVeiculo.renavam,
-      descricao: novoVeiculo.descricao
-    };
-    if (novoVeiculo.especie === "Motocicleta") {
-      veiculoParaSalvar.tipo = "moto";
-    } else {
-      veiculoParaSalvar.tipo = "carro";
-    }
-    if (!veiculoParaSalvar.placa || !veiculoParaSalvar.preco) {
-      return yield badRequest("Placa e pre\xE7o s\xE3o obrigat\xF3rios");
-    }
-    const created2 = yield createVeiculo(veiculoParaSalvar);
-    const fotosCadastradas = [];
-    if (files && files.length) {
-      for (let i = 0; i < files.length; i++) {
-        const f = files[i];
-        const ext = (f.mimetype.split("/")[1] || "jpg").split("+")[0];
-        const path2 = `veiculos/${created2.id}/${Date.now()}-${i}.${ext}`;
-        const foto = yield uploadAndCreateFoto(
-          Number(created2.id),
-          f.buffer,
+    const fotosUpload = [];
+    const fotosErro = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      try {
+        const allowedMimes = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
+        if (!allowedMimes.includes(file.mimetype)) {
+          fotosErro.push({
+            index: i + 1,
+            nome: file.originalname,
+            erro: `Formato inv\xE1lido. Use JPEG, PNG ou WebP`
+          });
+          console.warn(`\u26A0\uFE0F Foto ${i + 1} rejeitada: formato inv\xE1lido (${file.mimetype})`);
+          continue;
+        }
+        const maxSize = 10 * 1024 * 1024;
+        if (file.size > maxSize) {
+          fotosErro.push({
+            index: i + 1,
+            nome: file.originalname,
+            erro: `Arquivo muito grande (${(file.size / 1024 / 1024).toFixed(2)}MB). M\xE1ximo: 10MB`
+          });
+          console.warn(`\u26A0\uFE0F Foto ${i + 1} rejeitada: muito grande`);
+          continue;
+        }
+        const timestamp = Date.now();
+        const random = Math.random().toString(36).substring(7);
+        const extensao = file.mimetype.split("/")[1] || "jpg";
+        const fileName = `${veiculoCriado.placa}_${i + 1}_${timestamp}_${random}.${extensao}`;
+        const path2 = `veiculos/${veiculoCriado.placa}/${fileName}`;
+        console.log(`\u{1F4E4} Uploading foto ${i + 1}/${files.length}: ${fileName}`);
+        const fotoRecord = yield uploadAndCreateFoto(
+          veiculoCriado.id,
+          // ID do veículo
+          file.buffer,
+          // Buffer da imagem
           path2,
-          f.mimetype,
+          // Caminho no storage
+          file.mimetype,
+          // Content-Type
           i + 1
+          // Ordem da foto
         );
-        fotosCadastradas.push(foto);
+        fotosUpload.push(fotoRecord);
+        console.log(`\u2705 Foto ${i + 1}/${files.length} salva com sucesso`);
+      } catch (fotoError) {
+        console.error(`\u274C Erro ao processar foto ${i + 1}:`, fotoError);
+        fotosErro.push({
+          index: i + 1,
+          nome: file.originalname,
+          erro: fotoError instanceof Error ? fotoError.message : "Erro desconhecido"
+        });
       }
     }
-    return {
-      statusCode: 201,
-      body: { veiculo: created2, fotos: fotosCadastradas }
+    console.log(`\u2705 Upload conclu\xEDdo: ${fotosUpload.length}/${files.length} foto(s) enviada(s)`);
+    const resposta = {
+      veiculo: veiculoCriado,
+      fotos: {
+        total_enviadas: files.length,
+        sucesso: fotosUpload.length,
+        falhas: fotosErro.length,
+        lista_sucesso: fotosUpload,
+        lista_erros: fotosErro.length > 0 ? fotosErro : null
+      },
+      message: fotosErro.length === 0 ? `Ve\xEDculo cadastrado com sucesso! ${fotosUpload.length} foto(s) enviada(s).` : `Ve\xEDculo cadastrado! ${fotosUpload.length} foto(s) enviada(s), ${fotosErro.length} falharam.`
     };
+    return yield ok(resposta);
   } catch (error) {
-    console.error("Erro em createVeiculo:", error);
+    console.error("\u274C Erro ao cadastrar ve\xEDculo:", error);
     return yield badRequest(
-      error instanceof Error ? error.message : "Erro ao criar ve\xEDculo"
+      error instanceof Error ? error.message : "Erro ao cadastrar ve\xEDculo"
     );
   }
 });
-var updateVeiculo = (placa, veiculoAtualizado) => __async(null, null, function* () {
+var updateVeiculo = (id, veiculoAtualizado) => __async(null, null, function* () {
   const data = yield atualizarVeiculo(
-    placa,
+    id,
     veiculoAtualizado
   );
   const response = yield ok(data);
   return response;
 });
-var deleteVeiculo2 = (placa) => __async(null, null, function* () {
-  if (placa) {
-    yield deleteVeiculo(placa);
+var deleteVeiculo2 = (id) => __async(null, null, function* () {
+  if (id) {
+    yield deleteVeiculo(id);
     return yield ok({ message: "Ve\xEDculo deletado com sucesso" });
   }
 });
@@ -351,9 +547,26 @@ var getCarrosEstoque2 = (req, res, next) => __async(null, null, function* () {
     next(new HttpsError(500, "Erro ao buscar carros do estoque", error));
   }
 });
+var getAllVeiculosComFotos3 = (req, res, next) => __async(null, null, function* () {
+  try {
+    const response = yield getAllVeiculosComFotos2();
+    res.status(response.statusCode).json(response.body);
+  } catch (error) {
+    next(new HttpsError(500, "Erro ao buscar ve\xEDculos com fotos", error));
+  }
+});
+var getVeiculoByIdComFotos3 = (req, res, next) => __async(null, null, function* () {
+  try {
+    const id = Number(req.params.id);
+    const response = yield getVeiculoByIdComFotos2(id);
+    res.status(response.statusCode).json(response.body);
+  } catch (error) {
+    next(error);
+  }
+});
 var getVeiculoById3 = (req, res, next) => __async(null, null, function* () {
   try {
-    const id = req.params.id;
+    const id = Number(req.params.id);
     const response = yield getVeiculoById2(id);
     res.status(response.statusCode).json(response.body);
   } catch (error) {
@@ -362,25 +575,22 @@ var getVeiculoById3 = (req, res, next) => __async(null, null, function* () {
 });
 var createVeiculo3 = (req, res, next) => __async(null, null, function* () {
   try {
-    let isHttpResponse2 = function(obj) {
-      return obj && typeof obj.statusCode === "number";
-    };
-    var isHttpResponse = isHttpResponse2;
     const novoVeiculo = req.body;
-    const file = req.file ? [req.file] : [];
-    const response = yield createVeiculo2(novoVeiculo, file);
-    if (isHttpResponse2(response)) {
+    const files = req.files || [];
+    const response = yield createVeiculo2(novoVeiculo, files);
+    if (response && typeof response.statusCode === "number") {
       res.status(response.statusCode).json(response.body);
     } else {
       res.status(201).json(response);
     }
   } catch (error) {
+    console.error("\u274C Erro no controller ao criar ve\xEDculo:", error);
     next(new HttpsError(500, "Erro ao criar ve\xEDculo", error));
   }
 });
 var updateVeiculo2 = (req, res, next) => __async(null, null, function* () {
   try {
-    const id = req.params.id;
+    const id = Number(req.params.id);
     const veiculoAtualizado = req.body;
     const response = yield updateVeiculo(
       id,
@@ -393,7 +603,7 @@ var updateVeiculo2 = (req, res, next) => __async(null, null, function* () {
 });
 var deleteVeiculo3 = (req, res, next) => __async(null, null, function* () {
   try {
-    const id = req.params.id;
+    const id = Number(req.params.id);
     const response = yield deleteVeiculo2(id);
     if (response) {
       res.status(response.statusCode).json(response.body);
@@ -409,9 +619,30 @@ var deleteVeiculo3 = (req, res, next) => __async(null, null, function* () {
 var import_multer = __toESM(require("multer"), 1);
 var router = import_express.default.Router();
 var storage = import_multer.default.memoryStorage();
-var upload = (0, import_multer.default)({ storage, limits: { fileSize: 20 * 1024 * 1024 } });
+var upload = (0, import_multer.default)({
+  storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+    // Limite de 10MB por arquivo
+    files: 8
+    // Máximo de 8 arquivos
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedMimes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/webp"
+    ];
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error(`Formato inv\xE1lido: ${file.mimetype}. Use JPEG, PNG ou WebP.`));
+    }
+  }
+});
 router.get("/estoque", getCarrosEstoque2);
-router.get("/veiculos", getAllVeiculos3).post("/veiculos", upload.array("foto", 8), createVeiculo3).get("/veiculos/:id", getVeiculoById3).patch("/veiculos/:id", updateVeiculo2).delete("/veiculos/:id", deleteVeiculo3);
+router.get("/veiculos", getAllVeiculos3).get("/veiculos-com-fotos", getAllVeiculosComFotos3).get("/veiculos/:id/completo", getVeiculoByIdComFotos3).post("/veiculos", upload.array("foto", 8), createVeiculo3).get("/veiculos/:id", getVeiculoById3).patch("/veiculos/:id", updateVeiculo2).delete("/veiculos/:id", deleteVeiculo3);
 var veiculoRoutes_default = router;
 
 // src/routes/clienteRoutes.ts
@@ -536,7 +767,7 @@ var deleteCliente = (req, res) => __async(null, null, function* () {
 
 // src/routes/clienteRoutes.ts
 var router2 = import_express2.default.Router();
-router2.get("/usuarios", getAllClientes).get("/clientes/:cpf", getClienteById).post("/usuarios", createCliente).patch("/clientes/:cpf", updateCliente).delete("/clientes/:cpf", deleteCliente);
+router2.get("/clientes", getAllClientes).get("/clientes/:cpf", getClienteById).post("/clientes", createCliente).patch("/clientes/:cpf", updateCliente).delete("/clientes/:cpf", deleteCliente);
 var clienteRoutes_default = router2;
 
 // src/routes/funcionarioRoutes.ts
@@ -819,7 +1050,8 @@ var import_express5 = __toESM(require("express"), 1);
 // src/repositories/usuarioRepository.ts
 var getAllUsuarios = () => __async(null, null, function* () {
   const { data: usuarios, error } = yield supabase.from("usuarios").select("*");
-  if (!usuarios) throw new HttpsError(Number(error.code), "Erro ao buscar usu\xE1rios");
+  if (!usuarios)
+    throw new HttpsError(Number(error.code), "Erro ao buscar usu\xE1rios");
   return usuarios;
 });
 var getUsuarioById = (id) => __async(null, null, function* () {
@@ -828,7 +1060,23 @@ var getUsuarioById = (id) => __async(null, null, function* () {
     if (error.code === "PGRST116") {
       return null;
     }
-    throw new HttpsError(Number(error.code), `Erro ao buscar usu\xE1rio: ${error.message}`);
+    throw new HttpsError(
+      Number(error.code),
+      `Erro ao buscar usu\xE1rio: ${error.message}`
+    );
+  }
+  return usuarios;
+});
+var getUsuarioByEmail = (email) => __async(null, null, function* () {
+  const { data: usuarios, error } = yield supabase.from("usuarios").select("*").eq("email", email).single();
+  if (error) {
+    if (error.code === "PGRST116") {
+      return null;
+    }
+    throw new HttpsError(
+      Number(error.code),
+      `Erro ao buscar usu\xE1rio: ${error.message}`
+    );
   }
   return usuarios;
 });
@@ -839,15 +1087,25 @@ var createUsuario = (novoUsuario) => __async(null, null, function* () {
       throw new HttpsError(Number(error.code), "Email j\xE1 cadastrado no sistema");
     }
     if (error.code === "23514") {
-      throw new HttpsError(Number(error.code), "Dados inv\xE1lidos: verifique os campos obrigat\xF3rios");
+      throw new HttpsError(
+        Number(error.code),
+        "Dados inv\xE1lidos: verifique os campos obrigat\xF3rios"
+      );
     }
-    throw new HttpsError(Number(error.code), `Erro ao criar usu\xE1rio: ${error.message}`);
+    throw new HttpsError(
+      Number(error.code),
+      `Erro ao criar usu\xE1rio: ${error.message}`
+    );
   }
   return usuarios;
 });
 var atualizarUsuario = (id, usuarioAtualizado) => __async(null, null, function* () {
   const { data: usuarios, error } = yield supabase.from("usuarios").update(usuarioAtualizado).eq("id", id).select().single();
-  if (error) throw new HttpsError(Number(error.code), `Erro ao atualizar usu\xE1rio: ${error.message}`);
+  if (error)
+    throw new HttpsError(
+      Number(error.code),
+      `Erro ao atualizar usu\xE1rio: ${error.message}`
+    );
   return usuarios;
 });
 
@@ -958,8 +1216,157 @@ var router5 = import_express5.default.Router();
 router5.get("/usuarios", getAllUsuarios3).get("/usuarios/:id", getUsuarioById3).post("/usuarios", createUsuario3).patch("/usuarios/:id", updateUsuario2).delete("/usuarios/:id", deleteUsuario2);
 var usuarioRoutes_default = router5;
 
+// src/routes/authRoutes.ts
+var import_express6 = require("express");
+
+// src/services/authService.ts
+var import_jsonwebtoken = __toESM(require("jsonwebtoken"), 1);
+var import_bcrypt = __toESM(require("bcrypt"), 1);
+var JWT_SECRET = process.env.JWT_SECRET || "multicarros_secret_key_2025";
+var JWT_EXPIRES_IN = "7d";
+var login = (email, senha) => __async(null, null, function* () {
+  try {
+    const usuario = yield getUsuarioByEmail(email);
+    if (!usuario) {
+      return yield badRequest("Usu\xE1rio ou senha inv\xE1lidos");
+    }
+    const senhaValida = yield import_bcrypt.default.compare(senha, usuario.senha);
+    if (!senhaValida) {
+      return yield badRequest("Usu\xE1rio ou senha inv\xE1lidos");
+    }
+    const token = import_jsonwebtoken.default.sign(
+      {
+        id: usuario.id,
+        email: usuario.email,
+        nome: usuario.nome,
+        tipo: usuario.tipo
+      },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
+    const _a = usuario, { senha: _ } = _a, usuarioSemSenha = __objRest(_a, ["senha"]);
+    return yield ok({
+      success: true,
+      message: "Login realizado com sucesso",
+      token,
+      usuario: usuarioSemSenha
+    });
+  } catch (error) {
+    console.error("Erro no login:", error);
+    return yield badRequest("Erro ao fazer login");
+  }
+});
+var register = (userData) => __async(null, null, function* () {
+  try {
+    const usuarioExistente = yield getUsuarioByEmail(
+      userData.email
+    );
+    if (usuarioExistente) {
+      return yield badRequest("Email j\xE1 cadastrado");
+    }
+    const senhaHash = yield import_bcrypt.default.hash(userData.senha, 10);
+    const novoUsuario = __spreadProps(__spreadValues({}, userData), {
+      senha: senhaHash,
+      tipo: userData.tipo || 3
+      // 3 = Cliente por padrão
+    });
+    const usuario = yield createUsuario(novoUsuario);
+    const token = import_jsonwebtoken.default.sign(
+      {
+        id: usuario.id,
+        email: usuario.email,
+        nome: usuario.nome,
+        tipo: usuario.tipo
+      },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
+    const _a = usuario, { senha: _ } = _a, usuarioSemSenha = __objRest(_a, ["senha"]);
+    return yield created({
+      success: true,
+      message: "Usu\xE1rio cadastrado com sucesso",
+      token,
+      usuario: usuarioSemSenha
+    });
+  } catch (error) {
+    console.error("Erro no registro:", error);
+    return yield badRequest("Erro ao cadastrar usu\xE1rio");
+  }
+});
+var verifyToken = (token) => __async(null, null, function* () {
+  try {
+    const decoded = import_jsonwebtoken.default.verify(token, JWT_SECRET);
+    const usuario = yield getUsuarioById(decoded.id);
+    if (!usuario) {
+      return yield unauthorized("Usu\xE1rio n\xE3o encontrado");
+    }
+    const _a = usuario, { senha: _ } = _a, usuarioSemSenha = __objRest(_a, ["senha"]);
+    return yield ok({
+      success: true,
+      usuario: usuarioSemSenha
+    });
+  } catch (error) {
+    return yield unauthorized("Token inv\xE1lido ou expirado");
+  }
+});
+
+// src/controllers/authController.ts
+var login2 = (req, res, next) => __async(null, null, function* () {
+  try {
+    console.log("\u{1F4E5} Dados recebidos:", req.body);
+    const { email, senha } = req.body;
+    if (!email || !senha) {
+      console.log("\u274C Email ou senha faltando");
+      return res.status(400).json({
+        success: false,
+        message: "Email e senha s\xE3o obrigat\xF3rios"
+      });
+    }
+    console.log("\u{1F510} Tentando login com:", email);
+    const response = yield login(email, senha);
+    console.log("\u2705 Resposta do servi\xE7o:", response);
+    res.status(response.statusCode).json(response.body);
+  } catch (error) {
+    console.error("\u274C Erro no controller:", error);
+    next(new HttpsError(500, "Erro ao fazer login", error));
+  }
+});
+var register2 = (req, res, next) => __async(null, null, function* () {
+  try {
+    const userData = req.body;
+    const response = yield register(userData);
+    res.status(response.statusCode).json(response.body);
+  } catch (error) {
+    next(new HttpsError(500, "Erro ao registrar usu\xE1rio", error));
+  }
+});
+var verifyToken2 = (req, res, next) => __async(null, null, function* () {
+  var _a;
+  try {
+    const token = (_a = req.headers.authorization) == null ? void 0 : _a.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "Token n\xE3o fornecido"
+      });
+    }
+    const response = yield verifyToken(token);
+    res.status(response.statusCode).json(response.body);
+  } catch (error) {
+    next(new HttpsError(401, "Token inv\xE1lido", error));
+  }
+});
+
+// src/routes/authRoutes.ts
+var router6 = (0, import_express6.Router)();
+router6.post("/login", login2);
+router6.post("/register", register2);
+router6.get("/verify", verifyToken2);
+var authRoutes_default = router6;
+
 // src/routes/index.ts
 var route = (app2) => {
+  app2.use(authRoutes_default);
   app2.use(veiculoRoutes_default);
   app2.use(clienteRoutes_default);
   app2.use(funcionarioRoutes_default);
@@ -998,16 +1405,16 @@ var tratamentoErro_default = errorHandler;
 
 // src/app.ts
 function createApp() {
-  const app2 = (0, import_express6.default)();
+  const app2 = (0, import_express7.default)();
   app2.use((0, import_cors.default)());
-  app2.use(import_express6.default.json());
-  app2.use(import_express6.default.urlencoded({ extended: true }));
+  app2.use(import_express7.default.json());
+  app2.use(import_express7.default.urlencoded({ extended: true }));
   const publicDir = import_path.default.join(process.cwd(), "public");
-  app2.use("/public", import_express6.default.static(publicDir));
-  app2.use("/HTML", import_express6.default.static(import_path.default.join(publicDir, "HTML")));
-  app2.use("/css", import_express6.default.static(import_path.default.join(publicDir, "css")));
-  app2.use("/js", import_express6.default.static(import_path.default.join(publicDir, "js")));
-  app2.use("/images", import_express6.default.static(import_path.default.join(publicDir, "images")));
+  app2.use("/public", import_express7.default.static(publicDir));
+  app2.use("/HTML", import_express7.default.static(import_path.default.join(publicDir, "HTML")));
+  app2.use("/css", import_express7.default.static(import_path.default.join(publicDir, "css")));
+  app2.use("/js", import_express7.default.static(import_path.default.join(publicDir, "js")));
+  app2.use("/images", import_express7.default.static(import_path.default.join(publicDir, "images")));
   app2.get("/", (req, res) => {
     res.sendFile(import_path.default.join(publicDir, "HTML", "index.html"));
   });

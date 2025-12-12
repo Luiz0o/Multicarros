@@ -4,82 +4,81 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Detalhes do Veículo</title>
-    <link rel="stylesheet" href="../Css/verDetalhes.css" />
+    <link rel="stylesheet" href="../css/verDetalhes.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
+    <style>
+      /* 🎨 Estilos para loading e estados vazios */
+      .loading {
+        text-align: center;
+        padding: 3rem;
+        font-size: 1.2rem;
+        color: #666;
+      }
+      
+      .loading::after {
+        content: '...';
+        animation: dots 1.5s steps(4, end) infinite;
+      }
+      
+      @keyframes dots {
+        0%, 20% { content: '.'; }
+        40% { content: '..'; }
+        60%, 100% { content: '...'; }
+      }
+      
+      .error-message {
+        text-align: center;
+        padding: 2rem;
+        color: #d32f2f;
+        font-size: 1.1rem;
+      }
+      
+      .miniaturas img {
+        cursor: pointer;
+        transition: transform 0.2s, opacity 0.2s;
+      }
+      
+      .miniaturas img:hover {
+        transform: scale(1.05);
+        opacity: 0.8;
+      }
+    </style>
   </head>
   <body>
     <!-- HEADER -->
     <header class="topo">
       <div class="topo-logo">
-        <img src="../Images/multilogo.png" alt="Logo Multicarros" />
+        <img src="../images/multilogo.png" alt="Logo Multicarros" />
         <h2>Detalhes do Veículo</h2>
       </div>
     </header>
 
     <!-- CONTEÚDO -->
     <main class="detalhes-container">
+      <!-- 🖼️ GALERIA DE FOTOS -->
       <div class="galeria">
         <img
-          src="../Images/onix-plus-midnight-(22).webp"
-          alt="Chevrolet Onix"
+          src="../images/default-car.jpg"
+          alt="Carregando..."
           class="foto-principal"
           id="fotoPrincipal"
         />
-        <div class="miniaturas">
-          <img
-            src="../Images/interna-onix.jpg"
-            alt="Chevrolet Onix interior"
-            onclick="mudarImagem(this)"
-          />
-          <img
-            src="../Images/Onix -lateral.jpg"
-            alt="Chevrolet Onix lateral"
-            onclick="mudarImagem(this)"
-          />
-          <img
-            src="../Images/Chevrolet-Onix-Sedan-frente.jpg"
-            alt="Chevrolet Onix frente"
-            onclick="mudarImagem(this)"
-          />
-          <img
-            src="../Images/onix-plus-midnight-(22).webp"
-            alt="Chevrolet Onix traseira"
-            onclick="mudarImagem(this)"
-          />
+        <div class="miniaturas" id="miniaturas">
+          <!-- Miniaturas serão carregadas dinamicamente -->
         </div>
       </div>
 
+      <!-- 📋 INFORMAÇÕES DO VEÍCULO -->
       <div class="info-veiculo">
-        <h1>Chevrolet Onix 1.0 Flex Manual</h1>
-        <p class="preco">R$ 82.900</p>
+        <h1 id="titulo">Carregando informações...</h1>
+        <p class="preco" id="preco">---</p>
 
-        <table class="tabela-info">
+        <table class="tabela-info" id="tabela">
           <tr>
-            <td>Combustível</td>
-            <td>FLEX</td>
-          </tr>
-          <tr>
-            <td>Cor</td>
-            <td>Preto</td>
-          </tr>
-          <tr>
-            <td>Placa</td>
-            <td>T**-***6</td>
-          </tr>
-          <tr>
-            <td>KM</td>
-            <td>36.000</td>
-          </tr>
-          <tr>
-            <td>Ano Fabricação</td>
-            <td>2021</td>
-          </tr>
-          <tr>
-            <td>Ano Modelo</td>
-            <td>2022</td>
+            <td colspan="2" class="loading">Carregando detalhes</td>
           </tr>
         </table>
 
@@ -89,158 +88,246 @@
 
     <!-- BOTÃO WHATSAPP FIXO -->
     <a
-      href="https://wa.me/55619840002200?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20Chevrolet%20Onix%201.0%20Flex%20Manual."
+      href="https://wa.me/55619840002200"
       class="whatsapp-float"
       target="_blank"
       title="Falar no WhatsApp"
+      id="whatsappLink"
     >
       <i class="fa-brands fa-whatsapp"></i>
     </a>
 
-    <script src="../JS/verDetalhes.js"></script>
-    
+    <!-- ⚙️ SCRIPT PARA CARREGAR DETALHES -->
     <script>
-      (function () {
-        // Helpers
-        function qs(name) {
-          const params = new URLSearchParams(window.location.search);
-          return params.get(name);
+      
+(function () {
+  console.log("🚀 Iniciando carregamento de detalhes do veículo...");
+
+  // 🔧 FUNÇÕES AUXILIARES
+  function getQueryParam(name) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(name);
+  }
+
+  function escapeHtml(s) {
+    const div = document.createElement('div');
+    div.textContent = s || '';
+    return div.innerHTML;
+  }
+
+  function formatarPreco(valor) {
+    if (!valor || isNaN(valor)) return "Consulte";
+    return `R$ ${Number(valor).toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })}`;
+  }
+
+  function formatarKm(km) {
+    if (!km || isNaN(km)) return "---";
+    return `${Number(km).toLocaleString("pt-BR")} Km`;
+  }
+
+  // 📍 ELEMENTOS DO DOM
+  const fotoPrincipal = document.getElementById("fotoPrincipal");
+  const miniaturas = document.getElementById("miniaturas");
+  const titulo = document.getElementById("titulo");
+  const precoEl = document.getElementById("preco");
+  const tabela = document.getElementById("tabela");
+  const whatsappLink = document.getElementById("whatsappLink");
+
+  // 🆔 PEGAR ID DA URL
+  const veiculoId = getQueryParam("id");
+  
+  if (!veiculoId) {
+    console.error("❌ Nenhum ID de veículo fornecido na URL");
+    titulo.textContent = "Nenhum veículo selecionado";
+    precoEl.textContent = "---";
+    tabela.innerHTML = `
+      <tr>
+        <td colspan="2" class="error-message">
+          ⚠️ Nenhum veículo selecionado. 
+          <a href="/HTML/index.html">Voltar para a home</a>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  console.log(`🔍 Buscando veículo ID: ${veiculoId}`);
+
+  // 🎨 FUNÇÃO PARA RENDERIZAR O VEÍCULO
+  function renderizarVeiculo(veiculo) {
+    console.log("✅ Renderizando veículo:", veiculo);
+
+    // 🚗 NOME COMPLETO
+    const marca = veiculo.marca || "";
+    const modelo = veiculo.modelo || "";
+    const nomeCompleto = `${marca} ${modelo}`.trim() || "Veículo";
+    
+    const cambio = veiculo.cambio === "automatico" ? "Automático" : "Manual";
+    const tituloCompleto = `${nomeCompleto} - ${cambio}`;
+
+    // 💰 PREÇO
+    const preco = formatarPreco(veiculo.preco);
+
+    // 📸 FOTO PRINCIPAL
+    let fotoPrincipalUrl = "../images/default-car.jpg";
+    
+    if (veiculo.foto_principal) {
+      fotoPrincipalUrl = veiculo.foto_principal;
+    } else if (veiculo.fotos && veiculo.fotos.length > 0) {
+      fotoPrincipalUrl = veiculo.fotos[0].url;
+    }
+
+    // ✏️ ATUALIZA ELEMENTOS
+    titulo.textContent = tituloCompleto;
+    precoEl.textContent = preco;
+    fotoPrincipal.src = fotoPrincipalUrl;
+    fotoPrincipal.alt = nomeCompleto;
+    fotoPrincipal.onerror = function() {
+      this.src = "../images/default-car.jpg";
+    };
+
+    // 📋 TABELA DE INFORMAÇÕES
+    const dadosTabela = [
+      ["Combustível", veiculo.combustivel || "---"],
+      ["Cor", veiculo.cor || "---"],
+      ["Placa", veiculo.placa || "---"],
+      ["Quilometragem", formatarKm(veiculo.km)],
+      ["Ano Fabricação", veiculo.fabricacao || "---"],
+      ["Ano Modelo", veiculo.ano_modelo || "---"],
+      ["Câmbio", cambio],
+      ["Portas", veiculo.portas || "---"],
+      ["Status", veiculo.status === "novo" ? "Novo" : "Usado"],
+      ["Tipo", veiculo.tipo === "carro" ? "Carro" : "Moto"],
+
+    ];
+
+    // ✅ Adiciona descrição se existir
+    if (veiculo.descricao) {
+      dadosTabela.push(["Descrição", veiculo.descricao]);
+    }
+
+    tabela.innerHTML = dadosTabela
+      .map(([campo, valor]) => `
+        <tr>
+          <td><strong>${escapeHtml(campo)}</strong></td>
+          <td>${escapeHtml(String(valor))}</td>
+        </tr>
+      `)
+      .join("");
+
+    // 🖼️ GALERIA DE MINIATURAS
+    miniaturas.innerHTML = "";
+    
+    if (veiculo.fotos && veiculo.fotos.length > 0) {
+      // Ordena por ordem
+      const fotosOrdenadas = [...veiculo.fotos].sort((a, b) => 
+        (a.ordem || 0) - (b.ordem || 0)
+      );
+
+      fotosOrdenadas.forEach((foto, index) => {
+        const img = document.createElement("img");
+        img.src = foto.url;
+        img.alt = `${nomeCompleto} - Foto ${index + 1}`;
+        img.onerror = function() {
+          this.style.display = 'none';
+        };
+        
+        // Evento de clique para trocar foto principal
+        img.addEventListener("click", function () {
+          fotoPrincipal.src = this.src;
+          // ✅ Remove classe 'active' de todas e adiciona na clicada
+          miniaturas.querySelectorAll('img').forEach(i => i.classList.remove('active'));
+          this.classList.add('active');
+        });
+
+        // ✅ Primeira miniatura já vem ativa
+        if (index === 0) {
+          img.classList.add('active');
         }
 
-        function escape(s) {
-          return String(s || "");
-        }
+        miniaturas.appendChild(img);
+      });
 
-        const apiBase = document.body.dataset.apiVeiculos || "http://localhost:3000/veiculos";
-        const id = qs("id");
+      console.log(`📸 ${fotosOrdenadas.length} foto(s) carregada(s)`);
+    } else {
+      // Se não houver fotos, mostra apenas a principal
+      const img = document.createElement("img");
+      img.src = fotoPrincipalUrl;
+      img.alt = nomeCompleto;
+      img.classList.add('active');
+      miniaturas.appendChild(img);
+      
+      console.log("ℹ️ Nenhuma galeria de fotos disponível");
+    }
 
-        const fotoPrincipal = document.getElementById("fotoPrincipal");
-        const miniaturas = document.querySelector(".miniaturas");
-        const titulo = document.querySelector(".info-veiculo h1");
-        const precoEl = document.querySelector(".info-veiculo .preco");
-        const tabela = document.querySelector(".tabela-info");
-        const whatsappLink = document.querySelector(".whatsapp-float");
+    // 📱 ATUALIZA LINK DO WHATSAPP
+    const mensagem = `Olá! Gostaria de saber mais sobre o ${nomeCompleto} (Placa: ${veiculo.placa || veiculoId})`;
+    whatsappLink.href = `https://wa.me/55619840002200?text=${encodeURIComponent(mensagem)}`;
 
-        function renderFields(v) {
-          if (!v) return;
-          const modelo = v.marcaModelo || v.modelo || "";
-          const subtitle = v.subtitle || v.motor || "" || "";
-          const preco = v.preco
-            ? "R$ " + Number(v.preco).toLocaleString("pt-BR")
-            : v.precoText || "---";
-          const foto =
-            v.foto ||
-            v.image ||
-            (v.images && v.images[0]) ||
-            "../Images/default-car.jpg";
+    console.log("🎉 Veículo renderizado com sucesso!");
+  }
 
-          if (fotoPrincipal) fotoPrincipal.src = escape(foto);
-          if (titulo)
-            titulo.textContent = `${modelo} ${
-              subtitle ? " - " + subtitle : ""
-            }`.trim();
-          if (precoEl) precoEl.textContent = preco;
+  // 🌐 BUSCAR VEÍCULO NA API
+  // ✅ CORRIGIDO: Usa a rota correta com /completo
+  const apiUrl = `http://localhost:3000/veiculos/${veiculoId}/completo`;
+  
+  console.log(`📡 Fazendo requisição para: ${apiUrl}`);
 
-          // build table rows dynamically to reflect available fields
-          if (tabela) {
-            const rows = [
-              [
-                "Combustível",
-                v.combustivel || v.combustible || v.fuel || "---",
-              ],
-              ["Cor", v.cor || v.color || "---"],
-              ["Placa", v.placa || v.plate || "---"],
-              ["KM", v.km || v.kilometragem || v.mileage || "---"],
-              [
-                "Ano Fabricação",
-                v.anoFabricacao || v.ano_fabricacao || v.ano || "---",
-              ],
-              ["Ano Modelo", v.anoModelo || v.ano_modelo || "---"],
-            ];
-            tabela.innerHTML = rows
-              .map(
-                (r) =>
-                  `<tr><td>${escape(r[0])}</td><td>${escape(r[1])}</td></tr>`
-              )
-              .join("");
-          }
+  fetch(apiUrl, { 
+    method: "GET",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  })
+    .then((response) => {
+      console.log(`📥 Resposta recebida: HTTP ${response.status}`);
+      
+      if (response.status === 404) {
+        throw new Error("Veículo não encontrado");
+      }
+      
+      if (response.status === 204) {
+        throw new Error("Veículo não possui dados");
+      }
+      
+      if (!response.ok) {
+        throw new Error(`Erro HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      return response.json();
+    })
+    .then((data) => {
+      console.log("✅ Dados recebidos:", data);
+      
+      if (!data) {
+        throw new Error("Nenhum dado retornado pela API");
+      }
 
-          // thumbnails
-          if (miniaturas) {
-            miniaturas.innerHTML = "";
-            const imgs = [];
-            if (v.images && Array.isArray(v.images)) imgs.push(...v.images);
-            if (v.gallery && Array.isArray(v.gallery)) imgs.push(...v.gallery);
-            if (v.foto) imgs.unshift(v.foto);
-            if (v.image) imgs.unshift(v.image);
-            if (imgs.length === 0 && foto) imgs.push(foto);
-
-            imgs.slice(0, 6).forEach((src) => {
-              const im = document.createElement("img");
-              im.src = src;
-              im.alt = modelo;
-              im.addEventListener("click", function () {
-                if (fotoPrincipal) fotoPrincipal.src = this.src;
-              });
-              miniaturas.appendChild(im);
-            });
-          }
-
-          // update WhatsApp link to include model
-          if (whatsappLink) {
-            const base = whatsappLink.href.split("?")[0];
-            const text = encodeURIComponent(
-              `Olá! Gostaria de saber mais sobre: ${modelo} ${subtitle}`
-            );
-            whatsappLink.href = base + "?text=" + text;
-          }
-        }
-
-        function fetchById(idToFetch) {
-          const try1 =
-            apiBase.replace(/\/$/, "") + "/" + encodeURIComponent(idToFetch);
-          return fetch(try1, { method: "GET" })
-            .then((res) => {
-              if (!res.ok) throw new Error("status " + res.status);
-              return res.json();
-            })
-            .catch(() => {
-              const try2 = apiBase + "?id=" + encodeURIComponent(idToFetch);
-              return fetch(try2, { method: "GET" }).then((r) => {
-                if (!r.ok) throw new Error("status " + r.status);
-                return r.json();
-              });
-            });
-        }
-
-        if (id) {
-          fetchById(id)
-            .then((data) => {
-              // backend may return object or array
-              const v = Array.isArray(data) ? data[0] : data;
-              renderFields(v);
-            })
-            .catch((err) => {
-              console.error("Erro ao buscar detalhes do veículo:", err);
-            });
-        } else {
-          // if no id provided, try to fetch list and use first
-          fetch(apiBase, { method: "GET" })
-            .then((res) => {
-              if (!res.ok) throw new Error("status " + res.status);
-              return res.json();
-            })
-            .then((list) => {
-              if (Array.isArray(list) && list.length > 0) renderFields(list[0]);
-            })
-            .catch((err) => {
-              console.warn(
-                "Não foi possível carregar detalhes do veículo automaticamente:",
-                err
-              );
-            });
-        }
-      })();
+      renderizarVeiculo(data);
+    })
+    .catch((error) => {
+      console.error("❌ Erro ao buscar veículo:", error);
+      
+      // Mostra mensagem de erro amigável
+      titulo.textContent = "Veículo não encontrado";
+      precoEl.textContent = "---";
+      tabela.innerHTML = `
+        <tr>
+          <td colspan="2" class="error-message">
+            ❌ Não foi possível carregar as informações deste veículo.<br>
+            <small>Erro: ${escapeHtml(error.message)}</small><br><br>
+            <a href="/HTML/index.html">← Voltar para a home</a>
+          </td>
+        </tr>
+      `;
+      fotoPrincipal.src = "../images/default-car.jpg";
+      miniaturas.innerHTML = "";
+    });
+})();
     </script>
   </body>
 </html>

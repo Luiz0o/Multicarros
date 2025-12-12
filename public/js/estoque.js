@@ -1,73 +1,94 @@
- const btnNovoVeiculo = document.getElementById('btnNovoVeiculo');
- btnNovoVeiculo.addEventListener('click', () => {
-  window.location.href = "cadastrar.html";
-});
-    const modal = document.getElementById('modalVeiculo');
-    const btnCancelar = document.getElementById('btnCancelar');
-    const btnSalvar = document.getElementById('btnSalvar');
-    const tabela = document.getElementById('tabelaVeiculo').querySelector('tbody');
-    const searchInput = document.getElementById('searchInput');
+// ========================================
+// 🎯 ESTOQUE.JS - VERSÃO CORRIGIDA
+// ========================================
 
-    btnNovoVeiculo.addEventListener('click', () => {
-      modal.style.display = 'flex';
-    });
+console.log("✅ Script estoque.js carregado");
 
-    btnCancelar.addEventListener('click', () => {
+// 📍 ELEMENTOS DO DOM
+const btnNovoVeiculo = document.getElementById('btnNovoVeiculo');
+const btnVoltar = document.getElementById('btnVoltar');
+const modal = document.getElementById('modalVeiculo');
+const btnCancelar = document.getElementById('btnCancelar');
+const btnSalvar = document.getElementById('btnSalvar');
+const tabela = document.getElementById('tabelaVeiculo').querySelector('tbody');
+const searchInput = document.getElementById('searchInput');
+
+// ========================================
+// 🔙 BOTÃO VOLTAR
+// ========================================
+if (btnVoltar) {
+  btnVoltar.addEventListener('click', () => {
+    console.log("🔙 Voltando para dashboard...");
+    window.location.href = "/HTML/dashboard.html";
+  });
+} else {
+  console.warn("⚠️ Botão voltar não encontrado");
+}
+
+// ========================================
+// ➕ BOTÃO NOVO VEÍCULO
+// ========================================
+if (btnNovoVeiculo) {
+  btnNovoVeiculo.addEventListener('click', () => {
+    console.log("➕ Redirecionando para cadastro...");
+    window.location.href = "/HTML/cadastrarVeiculo.html";
+  });
+} else {
+  console.warn("⚠️ Botão novo veículo não encontrado");
+}
+
+// ========================================
+// 🔍 FILTRO DE BUSCA
+// ========================================
+if (searchInput && tabela) {
+  searchInput.addEventListener('keyup', function() {
+    const filter = searchInput.value.toLowerCase();
+    const rows = tabela.getElementsByTagName('tr');
+    
+    let visibleCount = 0;
+    
+    for (let row of rows) {
+      const cells = row.getElementsByTagName('td');
+      const match = Array.from(cells).some(cell => 
+        cell.textContent.toLowerCase().includes(filter)
+      );
+      
+      if (match) {
+        row.style.display = '';
+        visibleCount++;
+      } else {
+        row.style.display = 'none';
+      }
+    }
+    
+    console.log(`🔍 Busca: "${filter}" - ${visibleCount} resultado(s)`);
+  });
+} else {
+  console.warn("⚠️ Input de busca ou tabela não encontrado");
+}
+
+// ========================================
+// ❌ FECHAR MODAL AO CLICAR FORA
+// ========================================
+if (modal) {
+  window.addEventListener('click', (e) => {
+    if (e.target === modal) {
       modal.style.display = 'none';
-    });
+      console.log("❌ Modal fechado");
+    }
+  });
+}
 
-    btnSalvar.addEventListener('click', () => {
-      const modelo = document.getElementById('modelo').value;
-      const cor = document.getElementById('cor').value;
-      const Placa = document.getElementById('placa').value;
-      const Marca = document.getElementById('marca').value;
-      const AnoFabricacao = document.getElementById('ano fabricação').value;
-      const AnoModelo = document.getElementById('ano modelo').value;
+// ========================================
+// 🛡️ FUNÇÃO AUXILIAR: ESCAPAR HTML
+// ========================================
+function escapeHtml(s) {
+  return String(s || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 
-
-      if (!modelo || !cor || !placa || !marca || !anofabricação || !anoModelo) {
-        alert('Preencha todos os campos!');
-        return;
-      }
-
-      const novaLinha = document.createElement('tr');
-      novaLinha.innerHTML = `
-        <td>${modelo}</td>
-        <td>${Cor}</td>
-        <td>${Placa}</td>
-        <td>${Marca}</td>
-        <td>${AnoFabricacao}</td>
-        <td>${AnoModelo}</td>
-        <td><button class="btn-detalhes">Ver Detalhes</button></td>
-      `;
-      tabela.appendChild(novaLinha);
-
-      document.querySelectorAll('#modalVeiculo input').forEach(i => i.value = '');
-      modal.style.display = 'none';
-    });
-
-    // Filtrar tabela
-    searchInput.addEventListener('keyup', function() {
-      const filter = searchInput.value.toLowerCase();
-      const rows = tabela.getElementsByTagName('tr');
-      for (let row of rows) {
-        const cells = row.getElementsByTagName('td');
-        const match = Array.from(cells).some(cell => 
-          cell.textContent.toLowerCase().includes(filter)
-        );
-        row.style.display = match ? '' : 'none';
-      }
-    });
-
-    // Fechar modal ao clicar fora
-    window.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.style.display = 'none';
-      }
-    });
-
-    const btnVoltar = document.getElementById('btnVoltar');
-btnVoltar.addEventListener('click', () => {
-  window.location.href = "dashboard.html";
-});
-
+console.log("✅ Todos os event listeners configurados!");

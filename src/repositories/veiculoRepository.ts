@@ -14,6 +14,40 @@ export const getAllCarrosEstoque = async (): Promise<CarroEstoque[]> => {
   return data as CarroEstoque[];
 };
 
+// Função para buscar veículos COM suas fotos
+export const getAllVeiculosComFotos = async () => {
+  try {
+    console.log("📡 Buscando todos os veículos com fotos...");
+    
+    const { data, error } = await supabase
+      .from("veiculos")
+      .select(`
+        *,
+        fotos:fotos!veiculo_id (
+          id,
+          url,
+          ordem,
+          criado_em
+        )
+      `)
+      .order("data_cadastro", { ascending: false });
+
+    if (error) {
+      console.error("❌ Erro no Supabase:", error);
+      throw new HttError(
+        Number(error.code) || 500,
+        `Erro ao buscar veículos com fotos: ${error.message}`
+      );
+    }
+
+    console.log(`✅ ${data?.length || 0} veículos encontrados`);
+    return data;
+  } catch (error) {
+    console.error("❌ Erro na função getAllVeiculosComFotos:", error);
+    throw error;
+  }
+};
+
 // Função para buscar veículos cadastrados (tabela veiculos)
 export const getAllVeiculos = async (): Promise<Veiculo[]> => {
   const {data: veiculos, error} = await supabase.from("veiculos").select("*");
@@ -35,9 +69,61 @@ export const getVeiculoById = async (id: string): Promise<Veiculo | null> => {
     throw new HttError(
       Number(error.code),
       `Erro ao buscar veículo: ${error.message}`
-    ); // Outro erro ocorreu
+    );
   }
   return veiculos as Veiculo;
+};
+
+export const getVeiculoByIdComFotos = async (id: string) => {
+  try {
+    console.log(`📡 Buscando veículo ID ${id} com fotos...`);
+    
+    const { data, error } = await supabase
+      .from("veiculos")
+      .select(`
+        *,
+        fotos:fotos!veiculo_id (
+          id,
+          url,
+          ordem,
+          criado_em
+        )
+      `)
+      .eq("id", id)
+      .single();
+
+    if (error) {
+      console.error("❌ Erro no Supabase:", error);
+      
+      if (error.code === "PGRST116") {
+        console.log("⚠️ Veículo não encontrado");
+        return null;
+      }
+      
+      throw new HttError(
+        Number(error.code) || 500,
+        `Erro ao buscar veículo: ${error.message}`
+      );
+    }
+
+    console.log(`✅ Veículo encontrado:`, data);
+
+    // Ordena as fotos pela ordem
+    if (data && data.fotos && Array.isArray(data.fotos)) {
+      data.fotos = data.fotos.sort((a: any, b: any) => 
+        (a.ordem || 0) - (b.ordem || 0)
+      );
+      console.log(`📸 ${data.fotos.length} foto(s) ordenada(s)`);
+    } else {
+      console.log("ℹ️ Nenhuma foto encontrada para este veículo");
+      data.fotos = [];
+    }
+
+    return data;
+  } catch (error) {
+    console.error("❌ Erro na função getVeiculoByIdComFotos:", error);
+    throw error;
+  }
 };
 
 export const createVeiculo = async (novoVeiculo: Veiculo): Promise<Veiculo> => {

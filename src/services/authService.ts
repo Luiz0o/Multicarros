@@ -51,11 +51,27 @@ export const login = async (email: string, senha: string) => {
 
 export const register = async (userData: any) => {
   try {
-    // Verificar se o email já existe
-    const usuarioExistente = await usuarioRepository.getUsuarioByEmail(
-      userData.email
-    );
+    // ✅ VALIDAÇÕES DE CAMPOS OBRIGATÓRIOS
+    const camposObrigatorios = ['nome', 'email', 'senha', 'telefone', 'cpf', 'data_nascimento'];
+    for (const campo of camposObrigatorios) {
+      if (!userData[campo]) {
+        return await HttpResponse.badRequest(`Campo "${campo}" é obrigatório`);
+      }
+    }
 
+    // ✅ VALIDAÇÃO DE EMAIL
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(userData.email)) {
+      return await HttpResponse.badRequest('Email inválido');
+    }
+
+    // ✅ VALIDAÇÃO DE SENHA
+    if (userData.senha.length < 6) {
+      return await HttpResponse.badRequest('Senha deve ter no mínimo 6 caracteres');
+    }
+
+    // Verificar se o email já existe
+    const usuarioExistente = await usuarioRepository.getUsuarioByEmail(userData.email);
     if (usuarioExistente) {
       return await HttpResponse.badRequest("Email já cadastrado");
     }
@@ -93,9 +109,15 @@ export const register = async (userData: any) => {
       token,
       usuario: usuarioSemSenha,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erro no registro:", error);
-    return await HttpResponse.badRequest("Erro ao cadastrar usuário");
+    
+    // Tratamento específico de erros do banco
+    if (error.message?.includes('Email já cadastrado')) {
+      return await HttpResponse.badRequest('Email já cadastrado no sistema');
+    }
+    
+    return await HttpResponse.badRequest(error.message || "Erro ao cadastrar usuário");
   }
 };
 
